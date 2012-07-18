@@ -1,9 +1,0 @@
-Package: cRacker
-Type: Package
-Title: R-script suite for automated processing of proteomic peptide lists
-Version: 1.483
-Date: 2012-07-04
-Author: Henrik Zauber
-Maintainer: Henrik Zauber <Zauber@mpimp-golm.mpg.de>
-Description: cRacker has been programmed to automate standard normalization strategies of quantitative proteomic experiments. It simplifies the analysis of quantified peptide lists coming from various proteomic quantitation softwares. The applied normalization strategies are optimized for label free analyses of peptide intensities but also experiments using labeling approaches can be analyzed. 
-License:   GNU General Public License
