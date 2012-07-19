@@ -45,6 +45,7 @@ try(library("pcaMethods"))
 ,"gtools"
 ,"gdata"
 ,"caTools"
+,"bitops"
 )
 for(i in 1:length(.packages)){
 	temp.i <- .packages[i]
