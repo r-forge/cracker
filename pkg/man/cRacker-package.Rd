@@ -1,16 +1,16 @@
-\name{cRacker-package}
-\alias{cRacker-package}
-\alias{cRacker}
+\name{cRacker.proteomics-package}
+\alias{cRacker.proteomics-package}
+\alias{cRacker.proteomics}
 \docType{package}
 \title{
 a R-script suite for automated processing of proteomic peptide lists
 }
 \description{
-cRacker has been programmed to automate standard normalization strategies of quantitative proteomic experiments. It simplifies the analysis of quantified peptide lists coming from various proteomic quantitation softwares. The applied normalization strategies are optimized for label free analyses of peptide intensities but also experiments using labeling approaches can be analyzed. 
+cRacker.proteomics has been programmed to automate standard normalization strategies of quantitative proteomic experiments. It simplifies the analysis of quantified peptide lists coming from various proteomic quantitation softwares. The applied normalization strategies are optimized for label free analyses of peptide intensities but also experiments using labeling approaches can be analyzed. 
 }
 \details{
 \tabular{ll}{
-Package: \tab cRacker\cr
+Package: \tab cRacker.proteomics\cr
 Type: \tab Package\cr
 Version: \tab 1.483\cr
 Date: \tab 2012-06-23\cr

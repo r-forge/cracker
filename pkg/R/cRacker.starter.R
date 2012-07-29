@@ -2,7 +2,7 @@ cRacker.starter <-
 function(.path1 = NA){
 	#.path1 <- "/Users/henno/documents/Skripte/R-Functions/cRacker1.483-function/cRacker/"
 if(is.na(.path1)){
-.path1 <- paste(path.package("cRacker"),"data",sep = "/")
+.path1 <- paste(path.package("cRacker.proteomics"),"data",sep = "/")
 path1 <- .path1
 setwd(.path1)
 }
