@@ -1,5 +1,10 @@
 hz.path.set <-
 function(import.list = import.list,path1){	
+	require("tcltk2")
+	 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
+ 
+    #.bg.col <- "#efefef"
+    fontHeading <- tkfont.create(family = "Tahoma",size=10,weight="bold")
 	.bg <- "#efefef"
 	
 	done <- 1

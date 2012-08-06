@@ -10,6 +10,10 @@ function(	image.path = NULL,
 								) {
 					##d9d9d9
 					#.bg = "red"	
+					
+					require(tcltk)
+					require(tcltk2)
+
 					print("test")								
 	done 			<- tclVar(0)	
 	print("starting GUI")		
@@ -19,7 +23,6 @@ function(	image.path = NULL,
 	print("test")
 	print(getwd())
 	
-    require(tcltk)
     
 license.text <-  paste( "Copyright (C) <2011>  \n<Henrik Zauber; Max Planck Institute for Molecular Plant Physiology>\n
  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -30,13 +33,20 @@ You should have received a copy of the GNU General Public License along with thi
     
  try(	function.file <- read.csv(paste(path1,"/help-file.csv",sep = ""), stringsAsFactors = FALSE)	
 )
-if(!exists("function.file")){	function.file <- ""
+if(!exists("function.file")){	
+	try(	function.file <- read.csv(paste(path1,"/help-file.csv.gz",sep = ""), stringsAsFactors = FALSE)	
+)
 }
 
-    
-    #.bg.col <- "#efefef"
-    fontHeading <- tkfont.create(size=10,weight="bold")
+if(!exists("function.file")){	function.file <- ""
+}else{
+	print("Read function.file successfully.")
+}
 
+ tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
+ 
+    #.bg.col <- "#efefef"
+    fontHeading <- tkfont.create(family = "Tahoma",size=10,weight="bold")
 
 	hz.path.set  <-  function(title.q){
     fileDir<-tclvalue(tkchooseDirectory(title=title.q))
@@ -107,6 +117,7 @@ label.width = 35
 
 
 # GO
+
 tkadd(	go.libraryMenu,
 		"command",
 		label="Add",
@@ -1430,3 +1441,4 @@ if(tclvalue(done) == 2){     return(ReadAffy(
      				     				}
      				
      				 }
+#hz.read.parameters(path1 = paste(path.package("cRacker"),"data",sep = "/"),path2 = "",path2.set = list(settings = "",2,3),.data = "")

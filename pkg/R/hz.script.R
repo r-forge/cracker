@@ -1,5 +1,8 @@
 hz.script <-
 function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=NULL){
+require("tcltk2")
+tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
+
 
 
 path2 			<-	normalizePath(path2.set$path)

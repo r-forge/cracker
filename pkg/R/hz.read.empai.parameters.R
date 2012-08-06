@@ -40,12 +40,19 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>")
     
- try(	function.file <- read.csv(paste(path1,"/help-file.csv",sep = ""), stringsAsFactors = FALSE)	
+try(	function.file <- read.csv(paste(path1,"/help-file.csv",sep = ""), stringsAsFactors = FALSE)	
 )
+if(!exists("function.file")){	
+	try(	function.file <- read.csv(paste(path1,"/help-file.csv.gz",sep = ""), stringsAsFactors = FALSE)	
+)
+}
 if(!exists("function.file")){	function.file <- ""
 }
 
-     fontHeading <- tkfont.create(size=10,weight="bold")
+ tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
+ 
+    #.bg.col <- "#efefef"
+    fontHeading <- tkfont.create(family = "Tahoma",size=10,weight="bold")
 
 
 

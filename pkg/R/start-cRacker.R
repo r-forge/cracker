@@ -85,6 +85,8 @@ if(length(temp.i)== 0){
 cat("Loading tcltk:\n")
 require("tcltk")
 require("tcltk2")
+tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
+
 ### misc
 show.path.mac <- function(){
 input <-getwd()
