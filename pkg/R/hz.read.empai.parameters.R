@@ -128,6 +128,7 @@ tkadd(	go.libraryMenu,
 		label="Add",
 		command=function(path1){
 			if(!exists("path1")){
+				#path1 <- path.package("base")
 				}
 			try(hz.go.input(path1=path1))
 		tkmessageBox(title="Message",message="Finished Import\nPlease restart cRacker!",icon="warning",type="ok")

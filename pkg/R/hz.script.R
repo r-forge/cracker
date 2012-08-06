@@ -17,7 +17,7 @@ if(path2.test == "try-error"){
 
 
 if(is.na(path1)){
-	try(path1 <- paste(path.package("cRacker.proteomics"),"data",sep = "/"))
+	try(path1 <- paste(path.package("cRacker"),"data",sep = "/"))
 }
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 

@@ -18,7 +18,7 @@ function(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,
 #if(!exists(".go")){
 print("Start Loading mapping library")
 #.go <- read.delim(paste(path1,"mapping-library/",GO.library,sep = ""), stringsAsFactors = FALSE,header = FALSE)
-load(paste(path.package("cRacker.proteomics"),"/data/cRackerMapping-",gui.input$go.library,sep = ""))
+load(paste(path.package("cRacker"),"/data/cRackerMapping-",gui.input$go.library,sep = ""))
 
 print("Finished Loading mapping library")
 
