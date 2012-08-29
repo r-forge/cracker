@@ -22,7 +22,7 @@ total 	<- length(uni.acc)
 p.all	<- c()
 pt		<- list()
 list.ttest 	<- list()
-
+list.ttest.one.sided <- list()
 length.data <- 7#length(unique(x[,2]))
 if(length.data>6){
 	length.data <- 7 + 0.85*(length.data-6)
@@ -84,8 +84,15 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 
 
 	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
+			print(temp.agg)
+
+	
+	
 	temp.agg <- temp.agg[temp.agg[,2] < 2,1]
+	
 	if(length(temp.agg) !=0 ){
+		print("oneside-ttest")
+	oneside.ttest <- hz.oneside.ttest(temp.i.aov)
 	temp.exclu	<- grep(paste(temp.agg,collapse = "|"),temp.i.aov[,1])
 	temp.i.aov 		<- temp.i.aov[-temp.exclu,]
 	}
@@ -94,26 +101,70 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 
 	
 	temp.sum 		<- summary(temp.aov)
-	p.value 		<- temp.sum[1][[1]][[5]][1]}else{p.value <- 10}
-	if(is.na(p.value[1])){p.value <- 10	}
+	p.value 		<- temp.sum[1][[1]][[5]][1]}else{p.value <- 1}
+	if(is.na(p.value[1])){p.value <- 1	}
 	
 	
 	p.all 			<- c(p.all,p.value[1])
 	
 	if(p.value <= .data2$gui.input$p.value | 1 == 1){
 
-		#stop()
-	temp.pt				<- pairwise.t.test(as.numeric(temp.i.aov[,2]), temp.i.aov[,1],p.adjust.method="none")
+#try(	temp.i.aov <- temp.i.aov[-c(1,2,3),])
+	#temp.i.aov <- temp[-9,]
+
+	print(temp.i.aov)
+	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
+	
+		assign("temp.type.test",type.test,envir = .GlobalEnv)
+
+	assign("temp",temp.i.aov,envir = .GlobalEnv)
+	
+	
+	temp.pt	<- pairwise.t.test(as.numeric(temp.i.aov[,2]), temp.i.aov[,1],p.adjust.method="none")
+	
+
+	
+	
+	
+
+
 	list.ttest[[i]]		<- temp.pt
 	input				<- temp.pt$p.value
+	
+	
+
 
 	input.vec 	<- as.numeric(input)
 	input.vec.1 <- rep(rownames(input),dim(input)[2])
-	input.vec.2 <- lapply(colnames(input),function(x){rep(x,dim(input)[1])})
-	input.list 	<- cbind(input.vec.1,unlist(input.vec.2),input.vec)
-	input.list 	<- input.list[!is.na(input.list[,3]),]
-	
 
+	input.vec.2 <- lapply(colnames(input),function(x){rep(x,dim(input)[1])})
+
+	input.list 	<- cbind(input.vec.1,unlist(input.vec.2),input.vec)
+
+assign("input",input,envir= .GlobalEnv)
+assign("input.list",input.list,envir= .GlobalEnv)
+
+	input.list 	<- input.list[!is.na(input.list[,3]),]
+	include.oneside.ttest<- T
+	if(exists("list.ttest.one.sided")& include.oneside.ttest){
+		#list.ttest.one.sided[[i]] <- oneside.ttest$test
+		
+		if(is.matrix(input.list)){rep.factor <- dim(input.list)[1]}else{rep.factor <- 1}
+		if(is.matrix(oneside.ttest$one.side.test.results)){
+			rep.factor2 <- dim(oneside.ttest$one.side.test.results)[1]
+		}else{
+			#rep.factor<- t(as.matrix(oneside.ttest$one.side.test.results))
+			rep.factor2 <- 1
+		}
+		
+		type.vector <- c(rep("two.sided",rep.factor),rep("one.sided",rep.factor2))
+
+		input.list <- rbind(input.list,oneside.ttest$one.side.test.results[,c(3,2,1)])
+		
+	}else{
+		if(is.matrix(dim(input.list)[1])){rep.factor <- dim(input.list)[1]}else{rep.factor <- 1}
+		type.vector <- c(rep("two.sided",rep.factor))
+	}
 	
 	if(is.vector(input.list)){
 		input.list <- t(as.matrix(input.list))
@@ -126,11 +177,12 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 
 	}
 	if(!exists("input.all.list")){
+		type.all.vector <- type.vector
 		input.all.list <- input.list
 		#print(dim(input.all.list))
 	}else{
 	
-
+		type.all.vector <- c(type.all.vector,type.vector)
 		input.all.list	<- rbind(input.all.list, input.list)
 	}
 
@@ -202,5 +254,5 @@ sink(console, append = TRUE, type="message")
 }
 colnames(input.all.list) <- c("sample.1","sample.2","p.value","protein")
 write.csv(input.all.list,"ttest-pvalues.csv")
-return(list(aov=.return,pt = pt,ttest = list.ttest,ttestlist = input.all.list))
+return(list(aov=.return,pt = pt,ttest = list.ttest,ttestlist = input.all.list,type.vector.ttest = type.all.vector))
 }

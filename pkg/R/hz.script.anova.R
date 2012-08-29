@@ -41,9 +41,10 @@ if(dim(.data2$x)[2] > 1){
 	p.aov <- p.pt$aov
 	p.ttest	<- p.pt$ttest
 	ttestlist <- p.pt$ttestlist
+try(	ttestlist <- cbind(ttestlist,p.pt$type.vector.ttest))
 	#p.pt <- p.pt$pt
 	ttestlist <- cbind(ttestlist,p.adjust(as.numeric(ttestlist[,3])))
-	colnames(ttestlist)[5] <-  paste("p.value",gui.input$p.adjust.method,"corrected",sep = ".")
+	colnames(ttestlist)[5] <-  paste("p.value",gui.input$p.adjust.method,"corrected",sep = ".","ttest-type")
 	
 	write.csv(p.aov,"anova-p-values.csv")
 	
