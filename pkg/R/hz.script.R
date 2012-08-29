@@ -78,6 +78,13 @@ try(rm(ui))
 
 
 gui.input 		<- hz.read.parameters(image.path = NULL, build.matrix = build.matrix,path2 = path2, path2.set = path2.set,.data=.data,path1=path1)
+if(substr(gui.input$cracker,(nchar(gui.input$cracker)),nchar(gui.input$cracker)) == "/"){
+	
+	gui.input$cracker <- substr(gui.input$cracker,1,nchar(gui.input$cracker)-1)
+}
+
+
+
 
 	if(all(is.na(.data))){
 			ui$messageBox(title="Abort",message="No data loaded, please restart cRacker!",icon="error",type="ok") 
@@ -279,7 +286,6 @@ if(gui.input$plot.only != "" | gui.input$plot.only == FALSE ){
 #####################
 # Folder Creation
 setwd(gui.input$path.data)
-##sink(console, type="message")
 
 	##############	GUI
 	.label <- "creating analysis folder"
