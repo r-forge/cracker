@@ -62,6 +62,8 @@ p.val <- filtered[control,]
 #p.val <- cbind(p.val,p.adjust(p.val[,3],method = gui.input$p.adjust.method))
 
 data.log 	<- log2(as.numeric(data[,comb.vec[1,i]])/as.numeric(data[,comb.vec[2,i]]))
+
+
 error.try <- class(try(test 	<- grep(paste(rownames(data),collapse = "|"), anov[,1])))
 
 if(error.try == "try-error"){

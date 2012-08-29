@@ -1,5 +1,5 @@
 hz.script.kmeans <-
-function(.data2,gui.input,.design, y.lab.input,colorblind.set,color.blind,.col,prog.max,pb,ui){
+function(.data2,gui.input,.design, y.lab.input,colorblind.set,color.blind,plot.clustering,.col,prog.max,pb,ui){
 	
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
@@ -58,11 +58,9 @@ if(gui.input$norm.method == "median"){norm.temp <- "mean"}else{norm.temp <- gui.
 
 	if(dim(k.data)[1] > 2 & dim(k.data)[2] > 1){
 	k.data.NA <- k.data
-	#if(!n15.log2){
-	#k.data.NA[is.na(k.data.NA)] <- 0}else{
+
 	k.data.NA[is.na(k.data.NA)]	 <- 2*min(k.data.NA,na.rm = TRUE)
-#	}
-	# kmeans based on Correlation?
+
 	centers.check <- is.na(as.numeric(centers))
 	if(centers == "auto" & centers.check& 1==1){
 		cutree.cut <- T
@@ -114,7 +112,7 @@ if(gui.input$norm.method == "median"){norm.temp <- "mean"}else{norm.temp <- gui.
 while(error.rep == "try-error"){
 	if(gui.input$hclust.groups){
 	
-	hclust.test <- hclust(dist(plot.clustering))
+		#hclust.test <- hclust(dist(plot.clustering))
 		if(cutree.cut){
 			error.rep  <- class(try(kmeans.cluster.output <- cutree(plot.clustering,k=centers)))
 			
@@ -319,7 +317,7 @@ graphics.off()
 
 
 
-setwd(.wd)
+try(setwd(.wd))
 
 return(list(kmeans.cluster.output = kmeans.cluster.output, kmeans.col = kmeans.col, kmeans.at = kmeans.at, kmeans.list= kmeans.list))
 }

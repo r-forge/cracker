@@ -10,15 +10,19 @@ if(gui.input$calc.empai){.norm <- paste(.norm,"emPAI\n",sep = "")
 if(gui.input$quant.method == "lf"){.norm <- paste(.norm,"label free\n",sep = "")}
 if(gui.input$quant.method == "cbn"){.norm <- paste(.norm,"reference protein normalization on",gui.input$cbn.prot,"\n",sep = ";")}
 if(gui.input$quant.method == "15n"){
-	.norm <- paste(.norm,"labeled normlization\n",sep = "")
-	if(gui.input$n15.log2){
+	.norm <- paste(.norm,"labeled normalization\n",sep = "")
+	
+	
+	}
+if(gui.input$n15.log2){
 	.norm <- paste(.norm,"log2 transformation\n",sep = "")
 	}
 	if(gui.input$n15.correct.method != "none"){
 	.norm <- paste(.norm," ",gui.input$n15.correct.method," Correction of ratios to ratio ",gui.input$n15.correct.expect,"\n",sep = "")
-	}
+	}	
 	
-	}
+
+
 if(gui.input$n.correction){.norm <- paste(.norm,"n corrected",sep = ";")}
 
 cat(.norm)
@@ -26,7 +30,7 @@ cat(.norm)
 .scale <- "none"
 if(gui.input$row.norm){
 	.scale <- gui.input$norm.method
-	.scale <- paste(.scale,"; peptides with NA > ",shape*100,"% occurence in samples are excluded ;",sep = "")
+	.scale <- paste(.scale,"; peptides with NA > ",gui.input$shape*100,"% occurence in samples are excluded ;",sep = "")
 
 }
 

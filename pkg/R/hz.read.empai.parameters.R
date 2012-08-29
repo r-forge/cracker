@@ -130,19 +130,24 @@ label.width = 35
 
 
 # GO
+
+list.files.mapping <- list.files(paste((path1),sep = ""))
+
+
+
+list.files.mapping <- list.files.mapping[grep("^cRackerMapping",list.files.mapping)]
+
 tkadd(	go.libraryMenu,
 		"command",
 		label="Add",
-		command=function(path1){
-			if(!exists("path1")){
-				#path1 <- path.package("base")
-				}
-			try(hz.go.input(path1=path1))
+		command=function(){
+			try(hz.go.input(path1))
 		tkmessageBox(title="Message",message="Finished Import\nPlease restart cRacker!",icon="warning",type="ok")
 		},background = .bg)
+
 tkadd(go.libraryMenu,"command",label="Remove",
-	command=function(){hz.remove.data(folder = "mapping-library",path1 =tclvalue(path1))},background = .bg)
-tkadd(fileMenu,"cascade",label="mapping library",menu=go.libraryMenu,background = .bg)
+	command=function(){hz.remove.data(type = "^cRackerMapping",path1 =tclvalue(path1))},background = .bg)
+tkadd(fileMenu,"cascade",label="Mappings",menu=go.libraryMenu,background = .bg)
 #emPAI
 empai.libraryMenu <- tk2menu(topMenu,tearoff=FALSE)
 tkadd(	empai.libraryMenu,
@@ -153,12 +158,11 @@ tkadd(	empai.libraryMenu,
 			tkmessageBox(title="Message",message="Finished Import\nPlease restart cRacker!",icon="warning",type="ok")
 
 		})
-tkadd(empai.libraryMenu,"command",label="Remove", command=function(){hz.remove.data(folder = "emPAI",path1 =tclvalue(path1))},background = .bg)
+tkadd(empai.libraryMenu,"command",label="Remove", command=function(){hz.remove.data(type = "^cRackerSequence|^cRackerEmPAI",path1 =tclvalue(path1))},background = .bg)
 tkadd(fileMenu,"cascade",label="Protein Sequence library",menu=empai.libraryMenu,background = .bg)
 
 
 tkadd(topMenu,"cascade",label="Libraries",menu=fileMenu,background = .bg)
-
 
 
 
@@ -579,8 +583,15 @@ tkgrid(tkframe.kmeans, textEntryWidget,help.button(tb5,hz.function.file(function
 # anova.p
 ###### 
 
+tkframe.anova.log2 <- tk2frame(tb5 )
 
-  	entryWidth 		<- 5
+ 	anova.log.cb 			<- tk2checkbutton(tkframe.anova.log2)
+    
+	tb5.val.anova.log2 		<- tclVar(settings$tb5.val.anova.log2)
+	tkconfigure(anova.log.cb,variable=tb5.val.anova.log2)
+
+
+	entryWidth 		<- 5
 	
   	tb5.val.anova.p 		<- tclVar(paste(settings$tb5.val.anova.p))
   	
@@ -594,7 +605,9 @@ onArgEdit <- function () {
         }
         
   	textEntryWidget 	<- tkentry(tb5,width=paste(entryWidth),textvariable= tb5.val.anova.p,width = 19,validate = "none",validatecommand = onArgEdit)
-tkgrid(tk2label(tb5,text=hz.function.file(function.file,"PANOVA")[2],font = fontHeading,width = label.width),textEntryWidget,help.button(tb5,hz.function.file(function.file,"PANOVA")[2],hz.function.file(function.file,"PANOVA")[3]),padx = pad.val, pady = pad.y,sticky = "we" )
+  	
+tkgrid(tk2label(tkframe.anova.log2,text = paste(hz.function.file(function.file,"PANOVA")[2],"(log2"),font = fontHeading),anova.log.cb,tk2label(tkframe.anova.log2,text = "):"),columnspan = 3,sticky = "we" ) 
+tkgrid(tkframe.anova.log2,textEntryWidget,help.button(tb5,hz.function.file(function.file,"PANOVA")[2],hz.function.file(function.file,"PANOVA")[3]),padx = pad.val, pady = pad.y,sticky = "we" )
 
 
 ####
@@ -631,7 +644,7 @@ tkconfigure(tb5.do.go.m,variable=tb5.var.do.go)
 path1 <- tclVar(path1)
 
 
-	tb5.var.go.term.list 		<-c("none",as.character(list.files(paste(tclvalue(path1),"mapping-library/",sep = ""))))
+	tb5.var.go.term.list 		<-c("none",as.character(gsub("^cRackerMapping-","",list.files.mapping)))
 	
 		tb5.val.go.term.list				<- tclVar()  
 	tclvalue(tb5.val.go.term.list) 	<- settings$tb5.go.term.list	
@@ -1147,29 +1160,20 @@ tkgrid(tklabel(tt2,text = hz.function.file(function.file,"SAVE")[2],font = fontH
 # End of parameters 
 ##############################################################################################################
 
-	Cancel.but 	<- tk2button(tt2,text="Stop",command=function() {tclvalue(done)<-1;tkdestroy(tt2);return("stopped")})
-	OK.but 		<- tk2button(tt2,text="Start",command=function() {tclvalue(done)<-2;tkdestroy(tt2)})
+	Cancel.but 	<- tk2button(tt2,text="Stop",command=function() {tclvalue(done)<-1;tkdestroy(tt3)})
+	OK.but 		<- tk2button(tt2,text="Start",command=function() {tclvalue(done)<-2;tkdestroy(tt3)})
 	
-	tkbind(tt2, "<Return>",function(x){tclvalue(done)<-2 ; tkdestroy(tt2)})
-	tkbind(tt2, "<Escape>",function(x){tclvalue(done)<-1 ; tkdestroy(tt2); return("stopped")})
+	tkbind(tt2, "<Return>",function(x){tclvalue(done)<-2 ; tkdestroy(tt3)})
+	tkbind(tt2, "<Escape>",function(x){tclvalue(done)<-1 ; tkdestroy(tt3)})
 
 	
-   	if(as.integer(tclvalue(done)) == 2){print("User stopped cRacker GUI.")#tkmessageBox(message="You stopped cRacker!")
-   		}
-   		
 
 tkgrid(OK.but,Cancel.but,columnspan = 1,pady=5)	
 
-
 tkdestroy(tk.loading)
-
-tkconfigure(tt2,cursor="")
-
 tkgrid(tt2)
 
 tkwait.window(tt2)
-
-try(tkdestroy(tt2))
 
  	
 ##############################################################################################################
@@ -1518,9 +1522,11 @@ if(tclvalue(done) == 2){     return(ReadAffy(
 					centers			= tb5.val.kmeans,
 					p.adjust.method	= tb5.val.p.adjust,
      				p.value			= tb5.val.anova.p,
+     				log2.test		= binary.rewrite(tb5.val.anova.log2),
+
      				
      				do.GO			= binary.rewrite(tb5.var.do.go),#tb5.do.go.m
-     				go.library		= tclvalue(tb5.val.go.term.list),
+     				go.library		= paste("cRackerMapping-",tclvalue(tb5.val.go.term.list),sep = ""),
      				do.cor			= tclvalue(tb5.val.do.cor),
      				do.network		= binary.rewrite(tb5.var.do.network),
      				color.plots		= tclvalue(tb5.var.color.plots),

@@ -18,6 +18,23 @@ if(dim(.data2$x)[2] > 1){
 	
 	aov.export <-  .data2$aov.export.1
 	
+	if(gui.input$log2.test & !gui.input$n15.log2){
+	aov.export[,3] <- log2(as.numeric(aov.export[,3]))	
+	}
+	if(gui.input$log2.test|gui.input$n15.log2 ){
+	temp.samples.lab <- "tested peptides log2(intensity)"
+	}else{
+	temp.samples.lab <- "tested intensity"
+	
+	}
+	pdf("density-tested peptides.pdf")
+	try(plot(density(as.numeric(aov.export[,3]) ),main = temp.samples.lab))
+	dev.off()
+	
+	pdf("qqplot.pdf")
+	try(qqnorm(as.numeric(aov.export[,3])))
+	curve(x*1,add=T)
+	dev.off()
 	p.pt	<- try(hz.aov(as.data.frame(aov.export, stringsAsFactors = FALSE) ,.data2,gui.input,TRUE,as.numeric(prog.max),pb,ui))
 	
 

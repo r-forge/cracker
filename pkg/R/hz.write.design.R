@@ -18,11 +18,11 @@ print("Write Exp")
 
 ED.name <- "experimental-design-cRacker.tab"
 it <- 1
-while(length(grep(ED.name,list.files(path2)))){
+while(length(grep(ED.name,list.files(x)))){
 	ED.name <- paste("experimental-design-cRacker-",it,".tab",sep = "")
 	it <- it+1
 }
-write.table(.design,paste(path2,ED.name,sep = "/"),sep = "\t",
+write.table(.design,paste(x,ED.name,sep = "/"),sep = "\t",
 row.names
  = FALSE)
 #tclvalue(path4) <- paste(x,"experimental-design-cRacker.txt",sep ="")
@@ -33,7 +33,7 @@ tkmessageBox(title = "",
     
     
  temp.fun <- function(){wd <- getwd()
-setwd(path2)
+setwd(x)
 hz.show.path(x)
 setwd(wd)
 } 

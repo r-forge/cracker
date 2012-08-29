@@ -2,14 +2,6 @@ hz.script.graph <-
 function(.data2,gui.input,prog.max,pb,ui){
 cor.threshold 	<- 0.9
 	
-#path1 <- "/Users/henno/Desktop/ALOIS-Metabolite/exp2/ratios-log2-noinf.csv"
-
-#data.graph <-  read.csv(path1, stringsAsFactors = FALSE)
-
-#data.graph 	<- .data2$x.graph.matrix.signi
-#data.graph 	<- apply(.data2$x,2,as.numeric)
-#rownames(data.graph)				<- rownames(.data2$x)
-#data.graph[is.na(data.graph)] <- 0
 
 .rows <- rownames(.data2$x)
 .data2$x <- apply(.data2$x,2,as.numeric)
@@ -42,7 +34,7 @@ matrix.to.list <- function(x){
 	}
 
 
-library(igraph)
+#library(igraph)
 
 .graph.matrix 	<- 	matrix.to.list(data.graph2)
 .graph.matrix <- .graph.matrix[,c(1,3,2)]
@@ -85,7 +77,7 @@ write.table(.graph.matrix.signi,paste("network",gui.input$do.cor,"-cor-threshold
 
 
 #stop("end of script")
-if(gui.input$do.network){
+if(gui.input$do.network&1==0){
 
 if(dim(.graph.matrix.signi)[1] > 1){
 

@@ -639,7 +639,8 @@ library(gplots)
 				lwd = 2,
 				beside = TRUE,
 				xpd=F, 
-				yaxp=c(0,max(tempmean,na.rm = TRUE), 4) ,
+				yaxp=c(0,max(as.numeric(tempmean),na.rm = TRUE), 4) 
+				,
 				ylim = c(temp.min,max(as.numeric(sd.po)+as.numeric(temp.y),na.rm = TRUE)), 
 				offset = temp.min,
 				mgp = c(3.9,1,0),

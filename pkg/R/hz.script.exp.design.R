@@ -112,13 +112,15 @@ gui.input$exp.design != "")){
 		
 			}		
 		
-
-			if(colorblind.set){
-				.design.col <- colorRampPalette(unlist(color.blind)[-1])(max(.design.pch))[.design.pch]
+			if(length(.design.pch != 0)){
+				if(colorblind.set){
+					.design.col <- colorRampPalette(unlist(color.blind)[-1])(max(.design.pch))[.design.pch]
+				}else{
+					.design.col <- sample(rainbow(max(.design.pch)))[.design.pch]
+				}
 			}else{
-				.design.col <- sample(rainbow(max(.design.pch)))[.design.pch]
+				.design.pch <- 1
 			}
-			
 			
 			hz.exp.des.parse.data2[,1] <- .design.col
 			hz.exp.des.parse.data2[,3] <- .design.pch

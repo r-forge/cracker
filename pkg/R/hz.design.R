@@ -63,6 +63,6 @@ colnames(temp.all) <- c("Name","Experiment","Group","Group.Filter","Alternative.
 	cat(	text.out		,"\n")
 	cat(paste(rep("*",nchar(text.out)),collapse = "",sep = ""),"\n")
 
-	ratio.prog <- prog.max/length(files)
+	#ratio.prog <- prog.max/length(files)
 	return(temp.all)
 }

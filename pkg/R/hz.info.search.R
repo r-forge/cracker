@@ -2,12 +2,14 @@ hz.info.search <-
 function(.data2,.data, prog.max = prog.max,ui,pb){
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 
+
+
 x <- rownames(.data2$peptidelist)	
 all.peptides <- as.matrix((paste(
 			.data$code,
 			.data$sequence,
 			round(as.numeric(.data$mcr),digits = 0),
-			.data$charge,sep = " # "
+			.data$charge,sep = "#"
 		)))
 uni.prot <-unique(rownames(.data2$x))
 
@@ -84,8 +86,8 @@ if(dim(.data.info)[1] > length(uni.prot)){
 
 .data.info <- .data.info[order(.data.info[,1]),]
 .data.info <- apply(.data.info,2, as.character)
-.data.info[duplicated(.data.info[,2]),2] <- as.character(paste(.data.info[duplicated(.data.info[,2]),2],paste("search.error.",1:length(.data.info[duplicated(.data.info[,2]),2]),sep = ""),sep = "."))
-
+try(.data.info[duplicated(.data.info[,2]),2] <- as.character(paste(.data.info[duplicated(.data.info[,2]),2],paste("search.error.",1:length(.data.info[duplicated(.data.info[,2]),2]),sep = ""),sep = "."))
+)
 try(rownames(.data.info) <- .data.info[,2])
 
 return(.data.info)

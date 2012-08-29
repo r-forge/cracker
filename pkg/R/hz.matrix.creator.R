@@ -430,21 +430,21 @@ if(1==1){
 									temp.my$code,
 									temp.my$sequence,
 									round(as.numeric(temp.my$mcr),digits = 0),
-									temp.my$charge,sep = " # "
+									temp.my$charge,sep = "#"
 							)))
 		
 			pep.all.mean		<-  as.matrix(unique(paste(
 									temp.my$code,
 									temp.my$sequence,
 									round(as.numeric(temp.my$mcr),digits = 0),
-									temp.my$charge,sep = " # "
+									temp.my$charge,sep = "#"
 							)))
 		
 			raw.peptides	<-  as.matrix(unique(paste(
 									temp.my$code,
 									temp.my$sequence,
 									round(as.numeric(temp.my$mcr),digits = 0),
-									temp.my$charge,sep = " # "
+									temp.my$charge,sep = "#"
 							)))
 		
 		
@@ -486,7 +486,7 @@ if(1==1){
 						temp.my$code,
 						temp.my$sequence,
 						round(as.numeric(temp.my$mcr),digits = 0),
-					temp.my$charge,sep = " # "
+					temp.my$charge,sep = "#"
 					))
 					
 					
@@ -635,7 +635,7 @@ if(1==1){
 							temp.i$code,
 							temp.i$sequence,
 							round(as.numeric(temp.i$mcr),digits = 0),
-							temp.i$charge,sep = " # "
+							temp.i$charge,sep = "#"
 							)
 						
 # duplication, parser
@@ -1350,9 +1350,8 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 				
 				if(n15.log2){
 	
-					n15.correct.expect <- log2(n15.correct.expect)
-					
-					n15.log <- log2(pep.all.mean)
+				n15.correct.expect <- log2(n15.correct.expect)	
+				n15.log <- log2(pep.all.mean)
 				n15.log[n15.log == Inf] 	<- 9999 
 				n15.log[n15.log == -Inf] 	<- -9999
 				
@@ -1412,6 +1411,96 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 			pep.all.mean.n	<- pep.all.mean
 		}
 	}
+	
+#	pdf("distribution.pdf")
+	
+#				try(hist(as.numeric(pep.all.mean.n),main = "untransformed data"))
+	if(gui.input$n15.log2 & !gui.input$N15){		
+		print("performing log2 transformation")	
+				#assign("pep.all.mean.",pep.all.mean.n,envir=.GlobalEnv)
+	
+				pep.all.mean.n <- log2(pep.all.mean.n)
+				print("test")
+				#assign("pep.all.mean.n",pep.all.mean.n,envir=.GlobalEnv)
+
+				#´stop("")
+				pep.all.mean.n[pep.all.mean.n == Inf] 	<- 9999 
+								print("test")
+
+				pep.all.mean.n[pep.all.mean.n == -Inf] 	<- -9999
+				print("test")
+				
+				print(n15.correct.method)
+
+
+				if(n15.correct.method != "none"){
+			
+				print("start 15N")
+				n15.correct.expect <- log2(n15.correct.expect)
+				
+		pdf("log2-correction-label-free.pdf")
+				
+				n15.correct.value <- c()
+				n15.correct.matrix <- c()
+				
+
+				for(.n15 in 1: dim(pep.all.mean.n)[2]){
+					
+					temp.n15 <- pep.all.mean.n[,.n15]
+			#assign("temp.n15",temp.n15,env = .GlobalEnv)
+			
+			
+					if(n15.correct.method == "median"){ n15.mean <- median(temp.n15,na.rm = TRUE)}
+					if(n15.correct.method == "mean"){ n15.mean <- mean(temp.n15,na.rm = TRUE)}
+					if(n15.mean> 0){temp.correct.value <- n15.mean}else{
+					temp.correct.value <- n15.mean*-1	}
+print(temp.correct.value)
+					temp.n15.correct   <- as.numeric(temp.n15)+	as.numeric(temp.correct.value)
+					n15.correct.value <- c(n15.correct.value,temp.correct.value )
+					print("binding vectors")
+					n15.correct.matrix <- cbind(n15.correct.matrix,temp.n15.correct)
+						
+						
+					#hist(temp.n15,xlim = range(temp.n15, temp.n15.correct,na.rm = TRUE),col = "#00009f90", freq = FALSE)
+					plot.input <- c(1,2,3,4)
+					#print(temp.n15)
+					try(plot.input	<- density(temp.n15,na.rm = TRUE))
+					try(plot.input2	<- density(temp.n15.correct,na.rm = TRUE))
+
+					plot(plot.input,xlim = range(temp.n15, temp.n15.correct,na.rm = TRUE),main=paste(colnames(pep.all.mean.n)[.n15],"\nCorrection of log2 data"),type = 		"l",col = "blue",lwd =3)
+		
+					#hist(temp.n15.correct,add = TRUE,col = "#99000090",freq = FALSE)
+					points(plot.input,main="Density estimate of data",type = "l",col = "blue",lwd =3)
+					
+					points(plot.input2,main="",type = "l",col = "red",lwd =3)
+
+					
+		
+					legend("topleft",c("uncorrected","corrected"),fill= c(4,2),title = "legend")
+					legend("topright",as.character(round(abs(n15.mean-						n15.correct.expect),digit = 4)),title = "Delta")
+		
+					abline(v = c(n15.mean,n15.correct.expect),col = c(4,2))
+					
+					#abline(v=n15.correct.expect,col = "red")
+				}
+				
+				graphics.off()
+		
+				colnames(n15.correct.matrix ) <- colnames(pep.all.mean.n)
+				rownames(n15.correct.matrix ) <- rownames(pep.all.mean.n)
+				pep.all.mean.n <- n15.correct.matrix
+			}
+										print("control point")
+
+				
+				
+				
+				try(hist(as.numeric(pep.all.mean.n),"log2 transformed data"))
+	}
+	try(dev.off())
+						print("control point")
+
+	
 					
 	####
 	# group normalisation
@@ -1475,7 +1564,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 
 	if(re.pep.ex == TRUE & exclu == TRUE & calc.empai == FALSE){
 		#get seq from db:
-		sequences 		<- strsplit(as.character(rows)," # ")
+		sequences 		<- strsplit(as.character(rows),"#")
 		sequences.temp 	<- c()
 		acc.temp 		<- c()
 		acc.seq.temp	<- c()
@@ -1484,7 +1573,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 			temp.acc 	<- sequences[[sequ]][1]
 			sequences.temp 	<- c(sequences.temp,temp)
 			acc.temp 		<- c(acc.temp,temp.acc)
-			acc.seq.temp	<- c(acc.seq.temp,paste(sequences[[sequ]][1],sequences[[sequ]][2],sep = " # "))
+			acc.seq.temp	<- c(acc.seq.temp,paste(sequences[[sequ]][1],sequences[[sequ]][2],sep = "#"))
 		}
 		if(length(sequences.temp) != length(rows)){
 			alarm()
@@ -1998,7 +2087,7 @@ sam.mean.phospho <- matrix()
 			ui$messageBox(title="An error has occured!",message="Row-Normalisation of IonIntensities of 1 .column is not meaningful!",icon="error",type="ok")
 		}
 		
-		temp.row <- strsplit(choosen.peptides," # ",fixed = TRUE)	
+		temp.row <- strsplit(choosen.peptides,"#",fixed = TRUE)	
 		choosen.proteins <- c()
 		for(z in 1 : length(choosen.peptides)) {
 			temp 				<- temp.row[[z]][1]
@@ -2027,7 +2116,7 @@ sam.mean.phospho <- matrix()
 			data.sd.rel <- c()
 			data.n		<- c()
 			
-			acc.temp 	<- strsplit(rownames(sam.mean)," # ", fixed = TRUE)
+			acc.temp 	<- strsplit(rownames(sam.mean),"#", fixed = TRUE)
 			acc 		<- c()
 			for( i in 1:dim(sam.mean)[1]){
 				acc <- c(acc,acc.temp[[i]][1])
@@ -2212,7 +2301,7 @@ sam.mean.phospho <- matrix()
 			temp.my$code,
 			temp.my$sequence,
 			round(as.numeric(temp.my$mcr),digits = 0),
-			temp.my$charge,sep = " # "
+			temp.my$charge,sep = "#"
 		)))
 		
 	if(all(outlier == "NA" & norm.tog.pep == FALSE) | 1==1) {
@@ -2220,7 +2309,7 @@ sam.mean.phospho <- matrix()
 									temp.my$code,
 									temp.my$sequence,
 									round(as.numeric(temp.my$mcr),digits = 0),
-									temp.my$charge,sep = " # "
+									temp.my$charge,sep = "#"
 			)))
 		all.peptides.merge 		<- cbind(all.peptides,c(1:dim(all.peptides)[1]))
 		all.peptides.merge		<- merge(all.peptides.merge,choosen.peptides,by = 1 )

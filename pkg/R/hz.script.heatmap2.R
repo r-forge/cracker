@@ -163,5 +163,5 @@ if(error.try.heat == "try-error"){
 	}
 	dev.off()
 	#cbind(rownames(hm.input)[hm.data$rowInd],hm.data$rowInd)
-	return(list(report.heatmap.norm))
+	return(list(report.heatmap.norm,hz.script.hiercl.return = hz.script.hiercl.return))
 }

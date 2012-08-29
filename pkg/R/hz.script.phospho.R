@@ -7,7 +7,7 @@ function(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input
 .data2$prot.norm <- .data2$prot.n[grep(gui.input$phospho.string,rownames(.data2$prot.n)),]
 
 
-dir.create(.setpath <- paste(path2,foldername,"phosphopeptides-all",sep = "/")) 
+dir.create(.setpath <- paste(gui.input$path.data,"/",foldername,"phosphopeptides-all",sep = "/")) 
 setwd(.setpath)	
 
 	error.try <- class(.error<- try(hz.script.heatmap.return <- hz.script.heatmap()))
@@ -19,7 +19,7 @@ setwd(.setpath)
 setwd("../")
 
 
-p.split <- strsplit(rownames(.data2$x),"#")
+p.split <- strsplit(rownames(.data2$x),"#",fixed = T)
 
 phospho.matrix <- c()
 peptidelist.grep <- c()
@@ -77,7 +77,7 @@ inf.matrix[is.infinite(ref.proteins.phospho.matrix)& ref.proteins.phospho.matrix
 .data2$x.sd <- apply(.data2$x.sd[prots.phospho,],2,as.numeric) + apply(.data2$x.sd[proteinlist.grep,],2,as.numeric)
 
 
-dir.create(.setpath <- paste(path2,foldername,"phosphopeptides-protein-reference",sep = "/")) 
+dir.create(.setpath <- paste(gui.input$path.data,"/",foldername,"phosphopeptides-protein-reference",sep = "/")) 
 setwd(.setpath)	
 
 write.csv(ref.proteins.phospho.matrix,"Phosphopeptides-normalized-on-protein.csv")

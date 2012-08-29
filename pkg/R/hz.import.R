@@ -1,5 +1,5 @@
 hz.import <-
-function(import.list, path.data,input.file,N15 = FALSE,ED.ui = FALSE, path2.input.file,prog.max,ui,pb){
+function(import.list, path.data,input.file,N15 = FALSE,ED.ui = FALSE, path2.input.file,prog.max = 1000,ui,pb){
 test.envi <- environment()
 templates <- list.files(path.data,pattern = ".txt")	
 if(path2.input.file != ""){
@@ -72,10 +72,10 @@ if(length(templates) ==0){
 			read.in <- paste(path.data,templates[i],sep = "/")
 		}
 		
-		print(read.in)
+		#print(read.in)
 		
-		try(data.file <-	read.csv(read.in,sep = import.list	$sep,dec =(import.list$dec),skip = import.list$skip ,stringsAsFactors = FALSE))
-		print(dim(data.file))
+		try(data.file <-	read.csv(read.in,sep = import.list$sep,dec =(import.list$dec),skip = import.list$skip ,stringsAsFactors = FALSE))
+		#print(dim(data.file))
 		
 		
 		try(all.data <- rbind(all.data,data.file))
@@ -91,10 +91,10 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
 	grep.all <- c()
 	col.start <- 7
 	
-	print(colnames(all.data))
+	#print(colnames(all.data))
 	
 	for(a in col.start:dim(import.list)[2]){
-		print(a)
+		#print(a)
 		grep.i	<- import.list[,a] == colnames(all.data)
 		grep.i 	<- unique(c(1:dim(all.data)[2])[grep.i])
 		if(length(grep.i) == 0){
@@ -102,7 +102,7 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
 			
 		#ui$messageBox(title="Error!",message=paste("Could not find",import.list[import.list$file.type == "maxquant",a],"in",colnames(data.file)[a],".\nPlease check, if your import settings are correct.")	,icon="error",type="ok") ;
 		print(colnames(all.data))
-		print(import.list[,a])
+#		print(import.list[,a])
 		
 		}
 		if(length(grep.i)!=1){
@@ -155,7 +155,7 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
 	}
 	
 	
-	data.import.all$code 		<- tolower(data.import.all$code)
+	data.import.all$code 		<- tolower(gsub(" ","",data.import.all$code,fixed = TRUE))
 		
 	data.import.all$sam_id 		<- tolower(basename(gsub("\\\\","/", data.import.all$sam_id)))
 	data.import.all$rawfilename <- tolower(basename(gsub("\\\\","/", data.import.all$rawfilename)))

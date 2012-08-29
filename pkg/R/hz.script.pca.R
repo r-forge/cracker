@@ -12,12 +12,13 @@ require(gplots)
 		data.log <- .data2$x		
 		data.log <- apply(data.log,2,as.numeric)
 		
-		rownames(data.log) <- rownames(.data2$x)
 		
+		rownames(data.log) <- rownames(.data2$x)
+		data.log[data.log == "NaN"] <- NA
+
 		data.log.na.r <- apply(data.log,1,function(x){!all(is.na(as.numeric(x)))})
 		data.log.na.c <- apply(data.log,2,function(x){!all(is.na(as.numeric(x)))})
 		data.log <- data.log[data.log.na.r, data.log.na.c]
-		
 		
 	if(dim(data.log)[2] == 2){
 		#data.log[is.na(data.log)] <- 0	
@@ -31,6 +32,8 @@ require(gplots)
 			report.pca.bpca <- "error in calling bpca, NA replacement with median."
 		}
 		t.data3	 	<- t(.data3)
+	
+	
 	}else{
 		
 		print("Warning! Could not find pcaMethods package, NAs in pcadata are replaced with row median!")

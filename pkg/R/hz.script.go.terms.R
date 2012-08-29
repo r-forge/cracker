@@ -18,7 +18,20 @@ function(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,
 #if(!exists(".go")){
 print("Start Loading mapping library")
 #.go <- read.delim(paste(path1,"mapping-library/",GO.library,sep = ""), stringsAsFactors = FALSE,header = FALSE)
-load(paste(path.package("cRacker"),"/data/cRackerMapping-",gui.input$go.library,sep = ""))
+temp.list.mapping <- list.files(paste(path.package("cRacker"),"/data/",sep = ""))
+
+temp.grep.mapping <- grep(gui.input$go.library,temp.list.mapping)
+
+if(length(temp.grep.mapping)==0){
+try.error <- class(try(load(paste(path.package("cRacker"),"/data/cRackerMapping-",gui.input$go.library,sep = ""))
+))
+}else{
+
+	
+try.error <- class(try(load(paste(gui.input$cracker,"/",gui.input$go.library,sep = ""))))
+}
+
+
 
 print("Finished Loading mapping library")
 

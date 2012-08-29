@@ -87,5 +87,5 @@ if(all(temp.col == "white")){temp.col <- rep("grey20",length(temp.col))}
 	try(axis(1,lwd = temp.lwd-0.5,col = col.temp))
 		legend("topleft",c(paste("p.value <",gui.input$p.value),paste("corrected p.value <",gui.input$p.value)),fill = c(uncor.col , cor.col),cex = 2,border = "transparent",bg = "#FFFFFF99",box.col = "transparent")
 	dev.off() 
-	return(list(sclus = sclus,temp.col = temp.col,temp.lwd=temp.lwd,col.temp= col.temp))
+	return(list(sclus = sclus,temp.col = temp.col,temp.lwd=temp.lwd,col.temp= col.temp,plot.clustering =plot.clustering))
 	}

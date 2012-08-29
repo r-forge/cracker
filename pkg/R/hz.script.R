@@ -51,6 +51,13 @@ if(!exists(".data")|1==1){
 print("Loading .data")
 try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
 try(print(dim(.data)))
+
+#assign("import.list", import.list, envir=globalenv())
+#assign("path2.set", path2.set, envir=globalenv())
+#assign("path2.input.file", path2.input.file, envir=globalenv())
+#assign(".data.a", .data, envir=globalenv())
+
+
 print(path2.set$path)
 }
 
@@ -67,6 +74,7 @@ if(exists(".data")){
 }
 
 try(rm(ui))
+#assign(".data.test", .data, envir=globalenv())
 
 
 gui.input 		<- hz.read.parameters(image.path = NULL, build.matrix = build.matrix,path2 = path2, path2.set = path2.set,.data=.data,path1=path1)
@@ -109,7 +117,7 @@ if( gui.input == "stopped"){
 }	
 if(gui.input$N15){
 	if(!exists(".cRacker.check.N15.loaded")|1==1){
-	assign(".cRacker.check.N15.loaded", TRUE, envir=.GlobalEnv)
+	#assign(".cRacker.check.N15.loaded", TRUE, envir=.GlobalEnv)
 		 
 print("Loading .data")
 	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb,N15=TRUE)
@@ -588,6 +596,7 @@ print(dim(.data))
 								)
 								
 	))
+	#assign(".data2",.data2,envir=.GlobalEnv)
 
 
 if(exists(".data2")){
@@ -771,9 +780,8 @@ exp.design <- .data2$exp.des
 set.seed(2)
 
 error.try <- class(.error	<- try(results.script.exp.design<- hz.script.exp.design(exp.design = exp.design,gui.input = gui.input, colorblind.set = colorblind.set, color.blind = color.blind,.data2)))
-.col 						<- results.script.exp.design$.col
-hz.exp.des.parse.data2  	<- results.script.exp.design$hz.exp.des.parse.data2
-
+try(.col 						<- results.script.exp.design$.col)
+try(hz.exp.des.parse.data2  	<- results.script.exp.design$hz.exp.des.parse.data2)
 
 print("checked experimental design")
 
@@ -804,12 +812,12 @@ if(any(!is.na(order.control))){
 
 plot.type 	<- 1
 if(!gui.input$color.plots & gui.input$barpl){
-	hz.exp.des.parse.data2[,1] <- "white"
-	.col	<- "white"
+	#hz.exp.des.parse.data2[,1] <- "white"
+	#.col	<- "white"
 }else{
 	if(length(unique(hz.exp.des.parse.data2[,1])) == 1){
-			hz.exp.des.parse.data2[,1] <- "lightgrey"
-	.col	<- "lightgrey"
+	#		hz.exp.des.parse.data2[,1] <- "lightgrey"
+	#.col	<- "lightgrey"
 		
 		}
 
