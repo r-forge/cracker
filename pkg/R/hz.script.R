@@ -51,13 +51,14 @@ if(!exists(".data")|1==1){
 print("Loading .data")
 try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
 try(print(dim(.data)))
+assign(".data",.data,envir = .GlobalEnv)
 
 #assign("import.list", import.list, envir=globalenv())
 #assign("path2.set", path2.set, envir=globalenv())
 #assign("path2.input.file", path2.input.file, envir=globalenv())
 #assign(".data.a", .data, envir=globalenv())
-
-
+if(all())
+try(.data$code <- make.names(.data$code) )
 print(path2.set$path)
 }
 
@@ -78,10 +79,7 @@ try(rm(ui))
 
 
 gui.input 		<- hz.read.parameters(image.path = NULL, build.matrix = build.matrix,path2 = path2, path2.set = path2.set,.data=.data,path1=path1)
-if(substr(gui.input$cracker,(nchar(gui.input$cracker)),nchar(gui.input$cracker)) == "/"){
-	
-	gui.input$cracker <- substr(gui.input$cracker,1,nchar(gui.input$cracker)-1)
-}
+
 
 
 
@@ -117,10 +115,18 @@ if(loop.control == 2 & length(gui.input) == 1){
 	}
 }
 
+
+
+
 if( gui.input == "stopped"){
 	ui <- cracker.ui.tk
 	ui$messageBox(icon="warning",message="Abort by user!")
 	}
+}else{
+	if(substr(gui.input$cracker,(nchar(gui.input$cracker)),nchar(gui.input$cracker)) == "/"){
+	
+	gui.input$cracker <- substr(gui.input$cracker,1,nchar(gui.input$cracker)-1)
+}
 }	
 if(gui.input$N15){
 	if(!exists(".cRacker.check.N15.loaded")|1==1){
@@ -133,14 +139,28 @@ print(path2.set$path)
 }
 
 }
+.data <- .data[!is.na(.data$code),]
 
 
 ####
 ## exclude samples
 #####
-if(gui.input$exp.design!="")
-try(exp.design.temp <- read.table(gui.input$exp.design, stringsAsFactors = FALSE,header = T)
-)
+if(gui.input$exp.design!=""){
+try(exp.design.temp <- read.table(gui.input$exp.design, stringsAsFactors = FALSE,header = T))
+
+
+if(any(unique(exp.design.temp$Include)>1)){
+	print(text.warning<- "error in experimental design, exclusion string is not binary!")
+	tkmessageBox(title="Message",message=text.warning,icon="warning",type="ok")
+
+	
+	exp.design.temp$Include[exp.design.temp$Include!= 0] <- 1
+
+	write.table(exp.design.temp,gui.input$exp.design,sep = "\t")
+
+}
+}
+
 if(exists("exp.design.temp")){
 	exclude.string <- exp.design.temp$Name[exp.design.temp$Include == 0 ]
 	if(length(exclude.string)> 0){
@@ -191,7 +211,7 @@ calc.empai.list = gui.input$calc.empai.list
 
 gui.backup 		<- gui.input
 
-if(calc.empai == "TRUE"){
+if(gui.input$calc.empai == "TRUE"){
 	
 
 	
@@ -303,10 +323,10 @@ wd 	<- getwd()
 .add <- ""
 if(gui.input$N15){.add <- paste("N15",.add,sep = "-")}
 if(length(gui.input$prot.norm) >0){.add <- paste(.add,"Ref-Prot",sep = "-")}
-if(calc.empai& empai.sd){.add <- paste(.add,"exp",sep = "")}
-if(calc.empai& !empai.sd){.add <- paste(.add,"raw",sep = "")}
-if(gui.input$raw == FALSE & calc.empai == FALSE){.add <- paste(.add,"exp",sep = "")}else{.add <- paste(.add,"raw",sep = "")}
-if(calc.empai){.add <- paste(.add,"empai",sep = "-")}else{.add <- paste(.add,"IonIntensity",sep = "-")}
+if(gui.input$calc.empai& empai.sd){.add <- paste(.add,"exp",sep = "")}
+if(gui.input$calc.empai& !empai.sd){.add <- paste(.add,"raw",sep = "")}
+if(gui.input$raw == FALSE & gui.input$calc.empai == FALSE){.add <- paste(.add,"exp",sep = "")}else{.add <- paste(.add,"raw",sep = "")}
+if(gui.input$calc.empai){.add <- paste(.add,"empai",sep = "-")}else{.add <- paste(.add,"IonIntensity",sep = "-")}
 
 
 if(gui.input$plot.only ==  ""){
@@ -330,7 +350,7 @@ print(gui.input)
 sink(type = "message")
 sink()
 settings <- gui.input$settings
-save(settings,file = "parameters.Rdata")
+save(settings,gui.input,file = "parameters.Rdata")
 }
 parameters.write()
 ## back to the console
@@ -616,7 +636,7 @@ if(exists(".data2")){
 		ui$messageBox(title="Abort",message="Error in matrix.creator.function.\nCalculation failed!",icon="error",type="ok") ;stop()
 	
 	}
-	if(calc.empai){
+	if(gui.input$calc.empai){
 	#all.empai.backup 	<- .data2$x
 	#.data2$x		<- 	hz.shape(all.empai.backup,shape)$shape
 		
@@ -829,6 +849,7 @@ if(!gui.input$color.plots & gui.input$barpl){
 
 	
 }
+assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
 error.try <- class(.error<- try(hz.script.plot.main.return <-  hz.script.plot.main(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername=foldername, colorblind.set= colorblind.set, color.blind = color.blind)))
 
 

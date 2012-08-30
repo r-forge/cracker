@@ -89,7 +89,7 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 	
 	
 	temp.agg <- temp.agg[temp.agg[,2] < 2,1]
-	
+	oneside.ttest <- c()
 	if(length(temp.agg) !=0 ){
 		print("oneside-ttest")
 	oneside.ttest <- hz.oneside.ttest(temp.i.aov)

@@ -218,11 +218,13 @@ if(path.design != ""){
 			exp.set.2 <- exp.set.2[,.grep.exp]
 		}
 		exp.set.2 <- apply(exp.set.2,2,as.character)
-		
 	
+
 	##### change result file
 	x$rawfilename <- cut.path(as.character(x$rawfilename))
 	.result 	<- as.character(x$rawfilename)
+	
+	
 	for( .r in 1:dim(exp.set.2)[1]){
 		.result[tolower(.result) == exp.set.2[.r,1]]  <- exp.set.2[.r,2]
 		
@@ -852,6 +854,9 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 	rows					<- pep.all.mean[,1]
 	pep.all.mean			<- as.matrix(pep.all.mean[,2:dim(pep.all.mean)[2]])
 	pep.all.mean			<- apply(pep.all.mean,2,as.numeric)
+	
+	
+
 	
 	#print(dim(pep.all.mean))
 	#print(unique(sam.id))
@@ -1494,10 +1499,10 @@ print(temp.correct.value)
 
 				
 				
-				
-				try(hist(as.numeric(pep.all.mean.n),"log2 transformed data"))
+				#pdf("log2.pdf")
+				#try(hist(as.numeric(pep.all.mean.n),"log2 transformed data"))
+				#dev.off()
 	}
-	try(dev.off())
 						print("control point")
 
 	
@@ -1536,6 +1541,7 @@ print(temp.correct.value)
 
 	# rownorm of all peptides
 	if(row.norm == TRUE & calc.empai == FALSE){
+
 			pep.all.mean 		<- hz.norm(pep.all.mean.n,1,norm = norm.method,group = group.v)$x
 				
 		if(length(cbn.prot) > 0 & row.target.norm){

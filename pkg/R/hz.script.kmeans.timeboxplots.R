@@ -1,5 +1,7 @@
 hz.script.kmeans.timeboxplots <-
 function(kmeans.cluster.output,i,k.data,.design,gui.input, y.lab.input,colorblind.set,.col,prog.max,pb,ui,kmeans.list,kmeans.at,kmeans.col){
+	
+	print("box")
 temp.i 	<- as.matrix(kmeans.cluster.output[,1][kmeans.cluster.output[,1] == i])
 		temp.merge	<-	merge(as.matrix(temp.i),k.data,by = 0)
 		temp.merge 	<-  temp.merge[,-c(1,2)]
