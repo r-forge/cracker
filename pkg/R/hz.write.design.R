@@ -22,7 +22,8 @@ while(length(grep(ED.name,list.files(x)))){
 	ED.name <- paste("experimental-design-cRacker-",it,".tab",sep = "")
 	it <- it+1
 }
-write.table(.design,paste(x,ED.name,sep = "/"),sep = "\t",
+
+write.table(.design,normalizePath(paste(x,ED.name,sep = "/")),sep = "\t",
 row.names
  = FALSE)
 #tclvalue(path4) <- paste(x,"experimental-design-cRacker.txt",sep ="")

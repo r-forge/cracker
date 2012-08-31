@@ -113,7 +113,7 @@ if(is.null(sub.info)|!is.matrix(sub.info)){
 if(!exists(".design")){	.design <- NULL}
 if(length(unique(.design$Time)) < 2 & gui.input$exp.design != ""){
 	#gui.input$barpl <- FALSE
-	tkmessageBox(message = "Time column in ED contains only one entry. Time groups switched off!",icon = "warning")
+	#tkmessageBox(message = "Time column in ED contains only one entry. Time groups switched off!",icon = "warning")
 	gui.input$time.grouped <- FALSE
 }
 
