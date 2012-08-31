@@ -52,7 +52,7 @@ settings <- list(	tb1.val.replicates 		= "1",
 					tb5.nb.2.fl.bp.frame.var.xlab	= "time",
 					tb5.val.cluster.method	= "hclust",
 					tb5.val.anova.log2		= "1",
-					
+					val.onetailed.ttest		= "1",
 					
 					tb6.var.shape.script	= "0",
 					path4 					= "",

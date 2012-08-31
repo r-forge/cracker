@@ -115,9 +115,9 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 	print(temp.i.aov)
 	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
 	
-		assign("temp.type.test",type.test,envir = .GlobalEnv)
+		#assign("temp.type.test",type.test,envir = .GlobalEnv)
 
-	assign("temp",temp.i.aov,envir = .GlobalEnv)
+	#assign("temp",temp.i.aov,envir = .GlobalEnv)
 	
 	
 	temp.pt	<- pairwise.t.test(as.numeric(temp.i.aov[,2]), temp.i.aov[,1],p.adjust.method="none")
@@ -141,12 +141,12 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 
 	input.list 	<- cbind(input.vec.1,unlist(input.vec.2),input.vec)
 
-assign("input",input,envir= .GlobalEnv)
-assign("input.list",input.list,envir= .GlobalEnv)
+#assign("input",input,envir= .GlobalEnv)
+#assign("input.list",input.list,envir= .GlobalEnv)
 
 	input.list 	<- input.list[!is.na(input.list[,3]),]
-	include.oneside.ttest<- T
-	if(exists("list.ttest.one.sided")& include.oneside.ttest){
+	
+		if(exists("list.ttest.one.sided") &gui.input$onetailed.ttest){
 		#list.ttest.one.sided[[i]] <- oneside.ttest$test
 		
 		if(is.matrix(input.list)){rep.factor <- dim(input.list)[1]}else{rep.factor <- 1}

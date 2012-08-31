@@ -181,7 +181,7 @@ print("Finished hz.script.heatmap2")
 	}
 
 
-		assign("test",hz.script.heatmap2.return,envir=.GlobalEnv)
+		#assign("test",hz.script.heatmap2.return,envir=.GlobalEnv)
 
 	error.try <- class( .error <- try(hz.script.kmeans.return  <- hz.script.kmeans(.data2,gui.input,.design,y.lab.input,colorblind.set,color.blind,hz.script.heatmap2.return$hz.script.hiercl.return$plot.clustering,.col,prog.max,pb,ui)))
 	print("Finished hz.script.kmeans")	

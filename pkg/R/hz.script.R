@@ -47,19 +47,21 @@ pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
 
 import.list <- import.list[import.list$file.type ==path2.set$engine,]
 
-if(!exists(".data")|1==1){
+if(!exists(".data")|1==0){
 print("Loading .data")
+
+assign("import.list",list(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb),envir = .GlobalEnv)
 try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
 try(print(dim(.data)))
-assign(".data",.data,envir = .GlobalEnv)
+#assign(".data",.data,envir = .GlobalEnv)
 
 #assign("import.list", import.list, envir=globalenv())
 #assign("path2.set", path2.set, envir=globalenv())
 #assign("path2.input.file", path2.input.file, envir=globalenv())
 #assign(".data.a", .data, envir=globalenv())
-if(all())
+#if(all())
 try(.data$code <- make.names(.data$code) )
-print(path2.set$path)
+#print(path2.set$path)
 }
 
 if(exists("pb")){

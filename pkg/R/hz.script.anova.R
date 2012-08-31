@@ -36,12 +36,20 @@ if(dim(.data2$x)[2] > 1){
 	curve(x*1,add=T)
 	dev.off()
 	p.pt	<- try(hz.aov(as.data.frame(aov.export, stringsAsFactors = FALSE) ,.data2,gui.input,TRUE,as.numeric(prog.max),pb,ui))
+	if(!exists("p.pt")){
+		p.pt<- list(aov = c(),ttest = c(),ttestlist = c(),type.vector.ttest= "")
+	}else{
+		if(!is.list(p.pt)){
+		p.pt<- list(aov = cbind(0,0,0),ttest = cbind(0,0,0),ttestlist = cbind(0,0,0),type.vector.ttest = "")
+
+		}
+	}
 	
 
-	p.aov <- p.pt$aov
-	p.ttest	<- p.pt$ttest
-	ttestlist <- p.pt$ttestlist
-try(	ttestlist <- cbind(ttestlist,p.pt$type.vector.ttest))
+	try(p.aov <- p.pt$aov)
+	try(p.ttest	<- p.pt$ttest)
+	try(ttestlist <- p.pt$ttestlist)
+	try(ttestlist <- cbind(ttestlist,p.pt$type.vector.ttest))
 	#p.pt <- p.pt$pt
 	ttestlist <- cbind(ttestlist,p.adjust(as.numeric(ttestlist[,3])))
 	colnames(ttestlist)[5] <-  paste("p.value",gui.input$p.adjust.method,"corrected",sep = ".","ttest-type")

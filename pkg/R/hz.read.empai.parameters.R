@@ -610,6 +610,10 @@ tkgrid(tk2label(tkframe.anova.log2,text = paste(hz.function.file(function.file,"
 tkgrid(tkframe.anova.log2,textEntryWidget,help.button(tb5,hz.function.file(function.file,"PANOVA")[2],hz.function.file(function.file,"PANOVA")[3]),padx = pad.val, pady = pad.y,sticky = "we" )
 
 
+
+
+
+
 ####
 # p.adjust
 ####
@@ -623,6 +627,18 @@ tkgrid(tkframe.anova.log2,textEntryWidget,help.button(tb5,hz.function.file(funct
 
 tkgrid(tk2label(tb5,text=hz.function.file(function.file,"MTC")[2]),comboBox,help.button(tb5,hz.function.file(function.file,"MTC")[2], hz.function.file(function.file,"MTC")[3]),padx = pad.val, pady = pad.y,sticky = "we")
 
+######
+# onetailed
+###### 
+
+ 
+    cb3 					<- tk2checkbutton(tb5)
+    
+	tb5.val.onetailed.ttest 		<- tclVar(settings$val.onetailed.ttest)
+	tkconfigure(cb3,variable=tb5.val.onetailed.ttest)
+
+
+tkgrid(tk2label(tb5,text="Include one tailed t-test",width = label.width ),cb3,help.button(tb5,"Include one tailed t-test" ,""),padx = pad.val, pady = pad.y,sticky = "we")
 
 ####
 # do.go
@@ -1439,7 +1455,8 @@ settings$tb5.nb.2.fl.bp.frame.var.xlab <- tclvalue(tb5.1.2.fl.bp.frame.var.xlab)
 settings$tb5.val.cluster.method		<- tclvalue(tb5.val.cluster.method)
 if(tclvalue(tb5.val.cluster.method) == "hclust"){
 	hclust.groups 	     	= TRUE}else{hclust.groups <- FALSE}
-
+settings$tb5.val.anova.log2 <-tclvalue(tb5.val.anova.log2)
+settings$val.onetailed.ttest 	<- tclvalue(tb5.val.onetailed.ttest)
 ####
 
 ####
@@ -1535,6 +1552,7 @@ if(tclvalue(done) == 2){     return(ReadAffy(
      				lineplot.beside = lineplot.beside,
      				x.xlab			= as.character(tclvalue(tb5.1.2.fl.bp.frame.var.xlab)),
      				volcano			= binary.rewrite(tb5.val.volcano),
+     				onetailed.ttest = binary.rewrite(tb5.val.onetailed.ttest),
 					graphic.type	= tclvalue(tb5.var.graphic.type),
 					ratio.thres		= tclvalue(tb5.var.log2.ratio.thres),
 
