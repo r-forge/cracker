@@ -4,18 +4,28 @@ function(x,sclus,temp.col,temp.lwd,col.temp){
 		att.n <- attributes(x)
 		it<- grep(att.n$label,sclus$labels)
 		it	<<- it+1
+				if(!any(is.na(temp.col))){
+
 		attr(x,"nodePar") <- c(	att.n$nodePar,list(	lab.col = temp.col[it],
 											pch = "",
 											lab.cex = 1.2
 											
 											 )
 											)
+											}
+		if(any(!is.na(col.temp))){
 		attr(x,"edgePar") <- c(	att.n$edgePar,list(	lwd = temp.lwd	,
-											col = col.temp										 )
+											col = col.temp[it]
+																			 )
 											)
-											
+		}
+
+
+print(it)											
 
 		}
 		return(x)
 	
 	}
+	
+	

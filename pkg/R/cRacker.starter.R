@@ -125,16 +125,18 @@ print(files)
 
 
 value = "yes"
+.data <- NA
 
 while(value == "yes"){
 
 setwd(.path1)
 
-test.time  <- system.time(hz.script.return<- hz.script(path1=.path1,path2.set = .path2.set,  import.list = .import.list))	
-
+test.time  <- system.time(hz.script.return<- hz.script(path1=.path1,path2.set = .path2.set,  import.list = .import.list,.data=.data))	
+if(exists("hz.script.return")){
+	.data <- hz.script.return$.data
+	
+}
 message <- paste("The cRacker has been eaten!\nOutput has been written into:\n\n",getwd(),"\n\nDo you like to run a new session?")
-
-
 
 require(tcltk)
 value <- tkmessageBox(message =message,    icon = "question", type = "yesnocancel", default = "yes",title = "Thx for using cRacker..")

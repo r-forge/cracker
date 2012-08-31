@@ -27,7 +27,7 @@ if(all(temp.col == "white")){temp.col <- rep("grey20",length(temp.col))}
 							hang =0
 							
 							))
-	try(dendro.sclus <- dendrapply(dendro.sclus,function(x){hz.change.nodePar(x,sclus,temp.col,temp.lwd,col.temp)}))
+	try(dendro.sclus <- dendrapply(dendro.sclus,function(x){hz.change.nodePar(x,sclus,temp.col,temp.lwd,NA)}))
 	try(plot(dendro.sclus,lwd = temp.lwd, edgePar = list(lwd = temp.lwd,col = col.temp),axes = FALSE))
 	try(axis(2,lwd = temp.lwd-0.5,col = col.temp))
 		
@@ -78,14 +78,17 @@ if(all(temp.col == "white")){temp.col <- rep("grey20",length(temp.col))}
 							#hang =
 							
 							))
+							dendro.gclus2 <-  dendro.gclus
 							
 	 						
 							
-	try(dendro.gclus <- dendrapply(dendro.gclus,function(x){hz.change.nodePar(x,sclus,temp.col,temp.lwd,col.temp)}))
-	
-	try(plot(dendro.gclus,lwd = temp.lwd, edgePar = list(lwd = temp.lwd,col = "grey80"),axes = FALSE,horiz = T,xlab = "height"))
-	try(axis(1,lwd = temp.lwd-0.5,col = col.temp))
+#	try(dendro.gclus <- dendrapply(dendro.gclus,function(x){hz.change.nodePar(x,sclus,temp.col,temp.lwd,col.temp)}))
+	try(dendro.gclus <- dendrapply(dendro.gclus,function(x){hz.change.nodePar(x,gclus,col.aov,temp.lwd,col.aov)}))
+	#assign("hiercl" , list(dendro.gclus,sclus,temp.col,temp.lwd,col.temp,col.aov,gclus,dendro.gclus2),envir = .GlobalEnv)
+try(plot(dendro.gclus,lwd = temp.lwd, edgePar = list(lwd = temp.lwd,col = "grey80"),axes = FALSE,horiz = T,xlab = "height"))
+
+try(axis(1,lwd = temp.lwd-0.5,col = col.temp))
 		legend("topleft",c(paste("p.value <",gui.input$p.value),paste("corrected p.value <",gui.input$p.value)),fill = c(uncor.col , cor.col),cex = 2,border = "transparent",bg = "#FFFFFF99",box.col = "transparent")
 	dev.off() 
-	return(list(sclus = sclus,temp.col = temp.col,temp.lwd=temp.lwd,col.temp= col.temp,plot.clustering =plot.clustering))
+	return(list(sclus = sclus,temp.col = temp.col,temp.lwd=temp.lwd,col.temp= col.temp,plot.clustering =plot.clustering,col.aov = col.aov))
 	}

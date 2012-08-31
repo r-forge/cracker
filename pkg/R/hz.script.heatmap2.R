@@ -1,5 +1,6 @@
 hz.script.heatmap2 <-
 function(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog){
+	save(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog,file = "test.heatmap.Rdata")
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 	######## heatmap:
@@ -121,7 +122,7 @@ try(if(!gui.input$color.plot){
 	library("grDevices")
 	
 	try(dendro.gclus <- as.dendrogram(gclus))
-	try(dendro.gclus <- dendrapply(dendro.gclus, function(x){hz.change.nodePar(x,sclus,hz.script.hiercl.return$temp.col,hz.script.hiercl.return$temp.lwd, hz.script.hiercl.return$temp.col)}))
+	try(dendro.gclus <- dendrapply(dendro.gclus, function(x){hz.change.nodePar(x,gclus,hz.script.hiercl.return$col.aov,hz.script.hiercl.return$temp.lwd, hz.script.hiercl.return$col.aov)}))
 	if(!exists("dendro.gclus")){dendro.gclus <- gclus}
 	
 

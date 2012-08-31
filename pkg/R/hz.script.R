@@ -1,5 +1,5 @@
 hz.script <-
-function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=NULL){
+function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=NULL,.data = NA){
 require("tcltk2")
 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
 
@@ -7,7 +7,7 @@ tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")
 
 path2 			<-	normalizePath(path2.set$path)
 	ratio.prog <- 10000
-
+path1 <- normalizePath(path1)
 
 path2.test 		<- class(try(setwd(path2)))
 if(path2.test == "try-error"){
@@ -47,7 +47,7 @@ pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
 
 import.list <- import.list[import.list$file.type ==path2.set$engine,]
 
-if(!exists(".data")|1==0){
+if(!exists(".data")|!is.data.frame(.data)){
 print("Loading .data")
 
 assign("import.list",list(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb),envir = .GlobalEnv)
@@ -912,6 +912,6 @@ print("ended script")
 
 
 print("done")	
-return(list(.data2 =.data2,path2 = path2,.data,gui.input))
+return(list(.data2 =.data2,path2 = path2,.data=.data,gui.input = gui.input))
 
 }
