@@ -1,5 +1,6 @@
 help.tk <-
 function(title.help,text.help){		
+		.bg		= "lightgrey"
 		fontHeading		<- tkfont.create(size=10,weight="bold")
 		tth 			<- tktoplevel(bg = .bg)
  	 	tkwm.title(tth,paste("help ",title.help,sep = ""))
