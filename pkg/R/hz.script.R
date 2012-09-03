@@ -7,12 +7,16 @@ tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")
 
 path2 			<-	normalizePath(path2.set$path)
 	ratio.prog <- 10000
-path1 <- normalizePath(path1)
+path1 			<- normalizePath(path1)
 
 path2.test 		<- class(try(setwd(path2)))
 if(path2.test == "try-error"){
  	path2.input.file	<- basename(path2)
 	path2				<- dirname(path2)
+	path2.set$path 		 <-	path2
+	path2.set$input.file <- path2.input.file	
+	
+	
 }else{
 	path2.input.file <- ""
 }	
@@ -143,6 +147,19 @@ print(path2.set$path)
 }
 .data <- .data[!is.na(.data$code),]
 
+
+path2 			<-	normalizePath(path2.set$path)
+	ratio.prog <- 10000
+path1 <- normalizePath(path1)
+
+path2.test 		<- class(try(setwd(path2)))
+if(path2.test == "try-error"){
+ 	path2.input.file	<- basename(path2)
+	path2.set$path		<- dirname(path2)
+path2 <- dirname(path2)	
+}else{
+	path2.input.file <- ""
+}
 
 ####
 ## exclude samples
@@ -307,7 +324,7 @@ if(gui.input$plot.only != "" | gui.input$plot.only == FALSE ){
 
 #####################
 # Folder Creation
-setwd(gui.input$path.data)
+setwd(normalizePath(gui.input$path.data))
 
 	##############	GUI
 	.label <- "creating analysis folder"

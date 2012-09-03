@@ -81,8 +81,8 @@ if(progressbar ){
 if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.true& length(unique(temp.i.aov$experiment)) > 1){
 	
 	temp.aov 	<- aov(as.numeric(temp.i.aov$intensity)~ as.factor(temp.i.aov$experiment))
-
-
+	
+assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
 			print(temp.agg)
 

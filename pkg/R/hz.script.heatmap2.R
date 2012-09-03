@@ -1,6 +1,6 @@
 hz.script.heatmap2 <-
 function(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog){
-	save(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog,file = "test.heatmap.Rdata")
+	#save(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog,file = "test.heatmap.Rdata")
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 	######## heatmap:

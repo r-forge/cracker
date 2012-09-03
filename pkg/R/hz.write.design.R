@@ -1,20 +1,25 @@
 hz.write.design <-
-function(x=NULL,.data,prog.max = 10000){
+function(x=NULL,input.file,.data,prog.max = 10000){
 	if(!exists("prog.max")){prog.max <- 10000}
 
 N15 <- FALSE
+
+
+
+
+.design <-as.data.frame(hz.design(x, ui = ui,.data = .data)) 
+
 wd 		<- getwd()
 .try <- try(setwd(x))
 .try <- grep("cannot change working directory",fixed = TRUE,.try)
 print(.try)
-if(length(.try) != 0){setwd(wd); tkm <- tkmessageBox(title = "",
-    message = paste("Please set true data path first!"), icon = "info", type = "ok");return(.try)}else{setwd(wd)}
+if(length(.try) != 0){
+	setwd(x)#; tkm <- tkmessageBox(title = "",
+   # message = paste("Please set true data path first!"), icon = "info", type = "ok");return(.try)
+    x <- dirname(x)
+}else{setwd(wd)}
 
 print("Write Exp")
-
-
-
-.design <-as.data.frame(hz.design(x,ui = ui,.data = .data)) 
 
 ED.name <- "experimental-design-cRacker.tab"
 it <- 1

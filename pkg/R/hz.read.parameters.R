@@ -445,7 +445,9 @@ tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHead
 	comboBox 							<- ttkcombobox(tb3,values=tb3.outlier,textvariable = tb3.var.outlier,width = 17,state = "readonly")
 
 tkgrid(tk2label(tb3,text=hz.function.file(function.file,"OE")[2],font = fontHeading,width = label.width ),comboBox,help.button(tb3,hz.function.file(function.file,"OE")[2] , hz.function.file(function.file,"OE")[3]),padx = pad.val, pady = pad.y,sticky = "we")
-
+######
+# zero handling
+######
   	entryWidth 			<- 5
   	tb3.val.zero.treat 		<- tclVar(paste(settings$tb3.val.zero.treat ))
 onArgEdit <- function () {
@@ -458,6 +460,8 @@ onArgEdit <- function () {
         
 textEntryWidget 	<- tkentry(tb3,width=paste(entryWidth),textvariable= tb3.val.zero.treat,width = 19,validate = "none",validatecommand = onArgEdit)
 tkgrid(tk2label(tb3,text=hz.function.file(function.file,"ZH")[2],font = fontHeading,width = label.width),textEntryWidget,help.button(tb3,hz.function.file(function.file,"ZH")[2], hz.function.file(function.file,"ZH")[3]),padx = pad.val, pady = pad.y,sticky = "we" )
+
+
 
 ####		
 # TAB4 
@@ -1023,7 +1027,7 @@ setwd(wd)
 	cb <- tk2checkbutton(directoryFrame)
 	tb2.var.groupnorm <- tclVar(settings$tb2.var.groupnorm)#tclVar(settings$tb2.var.groupnorm)
 	tkconfigure(cb,variable=tb2.var.groupnorm)
-	tkgrid(browseButton,locationField , tk2button(locationFrame,text = "create",width = 6,command = function(){hz.write.design(as.character(tclvalue(path2)),.data);try(temp.fun)}), sticky="w",padx = pad.val, pady = pad.y,sticky = "we")
+	tkgrid(browseButton,locationField , tk2button(locationFrame,text = "create",width = 6,command = function(){hz.write.design(as.character(tclvalue(path2)),path2.set$input.file,.data);try(temp.fun)}), sticky="w",padx = pad.val, pady = pad.y,sticky = "we")
 
 	tkgrid(tk2label(directoryFrame,text=hz.function.file(function.file,"GSC")[2]),cb,help.button(directoryFrame,hz.function.file(function.file,"GSC")[2] ,hz.function.file(function.file,"GSC")[3]),pady = pad.y,padx = pad.val,sticky = "we")
 
