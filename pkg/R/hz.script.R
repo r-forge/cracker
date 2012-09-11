@@ -55,7 +55,18 @@ if(!exists(".data")|!is.data.frame(.data)){
 print("Loading .data")
 
 assign("import.list",list(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb),envir = .GlobalEnv)
-try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
+
+if(path2.set$data!= "default"){
+	assign("path2.set.test",path2.set,envir = .GlobalEnv)
+	load(path2.set$data)
+	
+}else{
+	
+	try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
+try(print(dim(.data)))
+
+}
+
 try(print(dim(.data)))
 #assign(".data",.data,envir = .GlobalEnv)
 
@@ -145,7 +156,7 @@ print(path2.set$path)
 }
 
 }
-.data <- .data[!is.na(.data$code),]
+#.data <- .data[!is.na(.data$code),]
 
 
 path2 			<-	normalizePath(path2.set$path)
@@ -929,6 +940,6 @@ print("ended script")
 
 
 print("done")	
-return(list(.data2 =.data2,path2 = path2,.data=.data,gui.input = gui.input))
+return(list(.data2 =.data2,path2 = path2,.data=.data,gui.input = gui.input,statistics = hz.script.plot.main.return$hz.cracker.anova.return))
 
 }

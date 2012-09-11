@@ -89,6 +89,8 @@ tkgrid(locationFrame,comboBox,sticky="w"			,columnspan = 1,padx = pad.val,pady =
 ######
 #####
 ######
+Filters 			<- "{{Rdata} {.Rdata}} {{All files} *}"
+
 
 locationFrame 					<- tkframe(tt,bg = .bg)
 
@@ -108,7 +110,7 @@ locationFrame 					<- tkframe(tt,bg = .bg)
   	buttonRcmdr <- function(..., borderwidth, fg, foreground, relief) ttkbutton(...)
 
     onBrowse2 			<- function(){
-        tclvalue(tt.val.settings) <- tclvalue(tkgetOpenFile(title = "Select your file!",parent = tt, initialdir = "anova-p-values.csv/Users"))
+        tclvalue(tt.val.settings) <- tclvalue(tkgetOpenFile(title = "Select your file!",parent = tt, initialdir = "/Users/",filetypes = Filters))
        }
 
 
@@ -125,6 +127,48 @@ locationFrame 					<- tkframe(tt,bg = .bg)
    	
    	tkgrid(browseButton2,locationField, sticky="w",padx = pad.val,pady = 4)
 	tkgrid(directoryFrame, sticky="nw",padx = pad.val,columnspan = 1)
+	tkgrid(locationFrame,padx = pad.val,pady = pad.val,columnspan = 2)
+	
+
+######
+#####
+######
+
+locationFrame 					<- tkframe(tt,bg = .bg)
+
+ 	question4					<- "Browse"
+    path.width  <- 10
+    entryWidth <- 80
+    pad.val = 5
+
+
+	tt.val.settings2				<- tclVar()  
+	tclvalue(tt.val.settings2) 	<- "default"
+
+	
+
+    directoryFrame2 		<- ttklabelframe(locationFrame,text = " Optional: Load data from import-binary.Rdata")
+
+  	buttonRcmdr <- function(..., borderwidth, fg, foreground, relief) ttkbutton(...)
+
+    onBrowse2 			<- function(){
+        tclvalue(tt.val.settings2) <- tclvalue(tkgetOpenFile(title = "Select your import-binary.Rdata file!",parent = tt, initialdir = "/Users",filetypes = Filters))
+       }
+
+
+   	browseButton3 <- buttonRcmdr(directoryFrame2, text=gettext("Browse", domain="R-Rcmdr"), width= path.width, command=onBrowse2, borderwidth=3)
+   	
+   	locationField2 <- ttkentry(directoryFrame2, width=entryWidth, textvariable= tt.val.settings2,	background = .bg)
+    test<- function(){tclvalue(tt.val.settings2) <- tclvalue(tt.val.settings2)  }
+	test()
+    locationScroll <- ttkscrollbar(directoryFrame2, orient="horizontal",
+        command=function(...) tkxview(locationField, ...))
+    tkconfigure(locationField, xscrollcommand=function(...) tkset(locationScroll, ...))
+    
+   	
+   	
+   	tkgrid(browseButton3,locationField2, sticky="w",padx = pad.val,pady = 4)
+	tkgrid(directoryFrame2, sticky="nw",padx = pad.val,columnspan = 1)
 	tkgrid(locationFrame,padx = pad.val,pady = pad.val,columnspan = 2)
 
 #####
@@ -152,17 +196,41 @@ if(tclvalue(done) == 2 ){
 			error.return <- class(try(load(tclvalue(tt.val.settings))))
 
 	}else{
-	error.return <- "try-error"	
+	error.return <- "fine"	
 	}
-if(error.return != "try-error"){
+
 	#error.return <- class(try(save(	settings,file = paste(path1,"settings/settings.Rdata",sep =""))))
+print("test")
 	if( error.return == "try-error"){
-		tkmessageBox(text = "Error in loading parameters from parameters.Rdata\nLoading previous saved parameters.")
+	print("test")
+
+		tkmessageBox(message = "Error in loading parameters from parameters.Rdata\nLoading previous saved parameters.")
+		tclvalue(tt.val.settings) <- "default"
+	print("test")
+
 	}else{print("loaded saved parameters")}
-}
+	print("test")
+
+
+if(tclvalue(done) == 2 ){
+	if(tclvalue(tt.val.settings2)!="default"){
+			error.return <- class(try(load(tclvalue(tt.val.settings2))))
+
+	}else{
+	error.return <- "fine"	
+	}
+    }
+	#error.return <- class(try(save(	settings,file = paste(path1,"settings/settings.Rdata",sep =""))))
+
+	if( error.return == "try-error"){
+			tclvalue(tt.val.settings2) <- "default"
+
+		tkmessageBox(message = "Error in loading parameters from parameters.Rdata\nLoading previous saved parameters.")
+	}else{print("loaded saved parameters")}
+
 	
 	
-	return(list(path = tclvalue(path4), engine=  tclvalue(tt.val.import.list),settings = tclvalue(tt.val.settings)))
+	return(list(path = tclvalue(path4), engine=  tclvalue(tt.val.import.list),settings = tclvalue(tt.val.settings),data = tclvalue(tt.val.settings2)))
 	
 	
 }else{

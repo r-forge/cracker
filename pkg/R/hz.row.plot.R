@@ -30,6 +30,11 @@ function(
 	gui.input,prog.max,ratio.prog,pb,hz.exp.des.parse.data2,colorblind.set,.col
 
 ){
+	if(!is.null(show.sd)){
+		show.sd[is.na(show.sd)] <- 0
+		
+	}
+	
 	if(!exists("prog.max")){prog.max <- 10000}
 sd.po <- 0
 	.aov.cor <- p.adjust(.aov,gui.input$p.adjust.method)
@@ -67,11 +72,12 @@ sd.po <- 0
 	}	
 		
 	if(max(nchar(col.x)) > 4){
-	oma.val <- 0.1+(max(nchar(col.x)-4))*0.39
+	oma.val <- 0.1+(max(nchar(col.x)-4))*0.45
+	print(oma.val)
 	}else{
 	oma.val <- 0.1
 	}
-	if(time.groups== T & group.barplot == F)oma.val<- 1
+	if(time.groups== T & barpl == F & group.barplot == F){oma.val<- 1}
 	
 	if(max(nchar(col.x)) > 4){
 	height <- 5+(max(nchar(col.x)-4))*0.1
@@ -126,7 +132,7 @@ while(pb.check == "try-error1"){
 
 		}
 		
-		
+		print(oma.val)
 		
 		if(length(dim(tempmean)[1]) > 1000) {
 			limit = 1000
@@ -296,16 +302,25 @@ while(pb.check == "try-error1"){
 			#stop()
 			### map .design for setting timegroups
 					#print(plot.timeline)	
+					
 			if(plot.timeline & time.groups ){
-				
 				plot.data.all <- c()
 				
-				
+temp.lim.fun <- function(x){temp.lim <- c()
+for(k.t in 1:length(names(x))){
+	temp.k.t <- x[[k.t]]
+	temp.lim <- c(temp.lim, as.numeric(temp.k.t[,2])+as.numeric(temp.k.t[,3]))
+}
+return(temp.lim)
+}
+error.try <- class(try(temp.lim <- temp.lim.fun(temp.x.m))				
+)
 				
 for(plot.matrix in hz.merge.control(names(temp.x.m),as.character(unique(.design.plot$Group)))
 ){
 print(plot.matrix)
 					plot.data <- temp.x.m[[plot.matrix]][,1:3]
+					assign("temp.x.m",temp.x.m,envir = .GlobalEnv)
 					print(plot.data)
 					if(is.vector(plot.data)){
 						plot.data <- t(as.matrix(plot.data))
@@ -313,9 +328,12 @@ print(plot.matrix)
 					}
 					#print(plot.data)
 					plot.data <- apply(plot.data,2,as.numeric)
-					plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) 
-					plot.data.all <- c(plot.data.all,(plot.data[,2]+plot.data[,3])*1.2,(plot.data[,2]-plot.data[,3]))
+					#plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) 
+					plot.data.all <- c((as.numeric(plot.data[,2])-plot.data[,3]),(as.numeric(plot.data[,2])+as.numeric(plot.data[,3]))*1.05)
 					}
+					
+										assign("plot.data.all",plot.data.all,envir = .GlobalEnv)
+
 					
 			if(lineplot.beside){
 				layout(matrix(c(rep(1,length(unique(.design$Group))+1),2:(length(unique(.design$Group))+2)),2,length(unique(.design$Group))+1, byrow =T), heights = c(0.2,1),widths = c(0.4,rep(1,length(unique(.design$Group)))))
@@ -344,6 +362,7 @@ plot(
 					
 				)
 			}else{
+
 				main.temp <- row.x[i]
 				try(par(oma = c(oma.val,0.1,0.1,0.1),mai = c(1,1,0.5,0)))
 
@@ -379,7 +398,9 @@ plot(
 				temp.temp.sd.po <- c()
 				for(plot.matrix in hz.merge.control(names(temp.x.m),as.character(unique(.design.plot$Group)))){
 					
+
 				if(lineplot.beside ){
+					
 						print("tr")
 	#try(par(oma = c(oma.val,0.1,0.1,0.1),mai = c(1,0,0.5,0)))
 				par(mai = c(0.6,0.3,0.1,0))
@@ -392,7 +413,7 @@ plot(
 					xlab = x.xlab,
 					ylab = x.ylab,
 					#names.arg = col.x,
-					ylim = range(plot.data.all,na.rm = T),
+					ylim = range(plot.data.all,na.rm = T)*c(1,1.2),
 					xlim = 	range(.design.plot$Time,na.rm = T) ,
 					frame = FALSE,
 					lwd = 3,
@@ -401,6 +422,7 @@ plot(
 					
 				)						
 				grid()
+
 					}
 					
 					if(any(duplicated(temp.x.m[[plot.matrix]][,1]))& i == 1){
@@ -416,7 +438,10 @@ plot(
 					}
 					#print(plot.data)
 					plot.data <- apply(plot.data,2,as.numeric)
-					plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) + 0.1
+					#plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) + 0.1
+					
+					
+					print(plot.data[,1:2])
 					points(plot.data[,1:2]	,
 							type = "b",
 							col = col.vec[[plot.matrix]],
@@ -424,6 +449,9 @@ plot(
 							cex = 1.1
 							
 					)
+					#print( col.vec[[plot.matrix]])
+					#graphics.off()
+					#stop()
 					if(lineplot.beside){
 			
 					plotCI(plot.data[,1],as.numeric(plot.data[,2]),ui =as.numeric(plot.data[,2])+as.numeric(plot.data[,3]),li =as.numeric(plot.data[,2])-as.numeric(plot.data[,3])
@@ -621,7 +649,12 @@ col.temp <- hz.merge.control(hz.exp.des.parse.data2[,2],col.x2)
 plot.col <- hz.exp.des.parse.data2[col.temp,1]
 
 library(gplots)
-			temp.min <- 0#min(temp.y -sd.po)*0.9
+			try.error <- class(try(temp.min <- min(temp.y -sd.po,na.rm = T)*0.9))
+			if(try.error == "try-error"){
+			try.error <- class(try(temp.min <- 0))
+
+			}
+			
 			  par(lwd = 2)
 
 				test <- barplot2(
@@ -665,8 +698,10 @@ library(gplots)
 			#print(temp.x)
 			
 			if(barpl&time.groups){n.input <- as.vector(t(time.groups.n))}else{n.input <- inf.m[i,]}
-			text(temp.x,y = 0,labels=n.input,col = "white",pos = l.pos,cex = 0.8)
-			
+			if(exists("temp.min")){			text(temp.x,y = temp.min,labels=n.input,col = "white",pos = l.pos,cex = 0.8)
+}else{
+	
+}
 			
 		}
 		if(length(show.sd) != 0& barpl == FALSE){

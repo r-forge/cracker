@@ -1,6 +1,7 @@
 hz.script.volcano <-
 function(.data2,gui.input,extented.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui){
-	
+
+#save(.data2,gui.input,extented.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui,file = "volcanotemp.rdata")
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 	
@@ -57,7 +58,7 @@ if(is.vector(filtered)){
 	filtered <- t(as.matrix(filtered))
 }
 
-control <- hz.merge.control(gsub(" ","",filtered[,4]),gsub(" ","",rownames(data)))
+control <- hz.merge.control(gsub(" ","",filtered[,5]),gsub(" ","",rownames(data)))
 p.val <- filtered[control,]
 #p.val <- cbind(p.val,p.adjust(p.val[,3],method = gui.input$p.adjust.method))
 
@@ -119,16 +120,17 @@ plot(data.log,-log10(as.numeric(p.val[,3])),col = te,xlab = paste("log2(",colnam
 
 abline(h=-log10(gui.input$p.value), v = c(ratio.thres,-ratio.thres),col = "grey",pch = 16)
 leg.vec <- c(
-				paste("p >",gui.input$p.value			,colnames(data)[comb.vec[1,i]],counts[counts[,1]==col.set[1],2]),
-				paste("p >",gui.input$p.value			,colnames(data)[comb.vec[2,i]],counts[counts[,1]==col.set[2],2]),
-				paste("adjusted p >",gui.input$p.value	,colnames(data)[comb.vec[1,i]],counts[counts[,1]==col.set[3],2]),
-				paste("adjusted p >",gui.input$p.value	,colnames(data)[comb.vec[2,i]],counts[counts[,1]==col.set[4],2])
+				paste("p <",gui.input$p.value			,colnames(data)[comb.vec[1,i]],counts[counts[,1]==col.set[1],2]),
+				paste("p <",gui.input$p.value			,colnames(data)[comb.vec[2,i]],counts[counts[,1]==col.set[2],2]),
+				paste("adjusted p <",gui.input$p.value	,colnames(data)[comb.vec[1,i]],counts[counts[,1]==col.set[3],2]),
+				paste("adjusted p <",gui.input$p.value	,colnames(data)[comb.vec[2,i]],counts[counts[,1]==col.set[4],2])
 				
 
 				)
 legend("topright",leg.vec,col = col.set,pch = 1,bg = "#ffffff90",bty  = "o",pt.lwd = 2,cex = 0.7,title = paste(length(test[test == TRUE]), "data points"))
 
-temp.data <- cbind(paste(colnames(data)[comb.vec[,i]],collapse ="/"),rownames(data),data.log,p.val[,3],p.val[,5])
+p.val[p.val[,6] ==1, 6]<- "not.tested"
+temp.data <- cbind(paste(colnames(data)[comb.vec[,i]],collapse ="/"),rownames(data),data.log,p.val[,3],p.val[,4],p.val[,6])
 
 }else{
 	print("no compar")
@@ -143,7 +145,7 @@ graphics.off()
 #write.csv(ttestlist,"")
 if(length(volcano.output) != 0){
 
-colnames(volcano.output)	<-	c("samples","accession","ratio","ttest.p.value",paste("p.value",gui.input$p.adjust.method,"corrected",sep = ".")) 
+colnames(volcano.output)	<-	c("samples","accession","ratio","ttest.p.value",paste("p.value",gui.input$p.adjust.method,"corrected",sep = "."),"ttest.type") 
 #test <- merge(signi.double,info[,c(1,4)],by = 1)
 if(!exists("extended.info")){
 extended.info 		<- .data2$proteinlist.info

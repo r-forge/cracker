@@ -83,9 +83,12 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 	temp.aov 	<- aov(as.numeric(temp.i.aov$intensity)~ as.factor(temp.i.aov$experiment))
 	
 assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
-	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
-			print(temp.agg)
+#print(temp.i.aov)
+print("start agg1")
 
+	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
+			#print(temp.agg)
+print("end agg1")
 	
 	
 	temp.agg <- temp.agg[temp.agg[,2] < 2,1]
@@ -93,6 +96,7 @@ assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 	if(length(temp.agg) !=0 ){
 		print("oneside-ttest")
 	oneside.ttest <- hz.oneside.ttest(temp.i.aov)
+	print(oneside.ttest)
 	temp.exclu	<- grep(paste(temp.agg,collapse = "|"),temp.i.aov[,1])
 	temp.i.aov 		<- temp.i.aov[-temp.exclu,]
 	}
@@ -112,8 +116,18 @@ assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 #try(	temp.i.aov <- temp.i.aov[-c(1,2,3),])
 	#temp.i.aov <- temp[-9,]
 
-	print(temp.i.aov)
+	#print(temp.i.aov)
+			print(dim(temp.i.aov))
+
+	print("start agg2")
+	if(dim(temp.i.aov)[1] == 0){
+		temp.i.aov <- t(as.matrix(c(NA,NA)))
+				print(dim(temp.i.aov))
+
+	}
 	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
+	print("end agg2")
+
 	
 		#assign("temp.type.test",type.test,envir = .GlobalEnv)
 
@@ -150,6 +164,7 @@ assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 		#list.ttest.one.sided[[i]] <- oneside.ttest$test
 		
 		if(is.matrix(input.list)){rep.factor <- dim(input.list)[1]}else{rep.factor <- 1}
+		if(!exists("oneside.ttest")){oneside.ttest <- list()}
 		if(is.matrix(oneside.ttest$one.side.test.results)){
 			rep.factor2 <- dim(oneside.ttest$one.side.test.results)[1]
 		}else{
@@ -252,7 +267,14 @@ sink()
 sink(console,append = TRUE)
 sink(console, append = TRUE, type="message")
 }
-colnames(input.all.list) <- c("sample.1","sample.2","p.value","protein")
+try(input.all.list <- cbind(input.all.list,p.adjust(as.numeric(input.all.list[,3]),gui.input$p.adjust.method)))
+if(dim(input.all.list)[2] == 5){
+	input.all.list <- input.all.list[,c(1,2,3,5,4)]
+	colnames(input.all.list) <- c("sample.1","sample.2","p.value",paste("adusted.p.value",gui.input$p.adjust.method),"protein")
+
+}else{colnames(input.all.list) <- c("sample.1","sample.2","p.value","protein")
+}
+
 write.csv(input.all.list,"ttest-pvalues.csv")
 return(list(aov=.return,pt = pt,ttest = list.ttest,ttestlist = input.all.list,type.vector.ttest = type.all.vector))
 }

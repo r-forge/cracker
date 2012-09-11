@@ -118,6 +118,10 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
 	data.import[,is.na(grep.all.na)] <- NA
 	
 	colnames(data.import) <- colnames(import.list)[col.start:dim(import.list)[2]]
+	assign("data.import",data.import,envir = .GlobalEnv)  
+		#data.import <- data.import[!is.na(data.import$intensity.1) & is.na(data.import$intensity.2& is.na(data.import$Proteins)),]
+
+	
 	
 	if(N15){
 		if(all(is.na(data.import$intensity.2))){
@@ -150,10 +154,10 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
 		
 		}
 	}
-	
+	if(!all(is.na(data.import))){
 	try(data.import.all  <- rbind(data.import.all ,data.import))
 	}
-	
+	}
 	
 	data.import.all$code 		<- tolower(gsub(" ","",data.import.all$code,fixed = TRUE))
 		
@@ -174,6 +178,7 @@ try(			ui$setProgressBar(pb, i*ratio.prog, label=paste( "Reading out data:",i,"o
     rm(ui,pb)
 		
 	}
+		assign("data.import.all",data.import.all,envir = .GlobalEnv)  
 	return(data.import.all)
 
 }

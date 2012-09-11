@@ -1,5 +1,8 @@
 hz.script.row.plot <-
 function(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui){
+	
+save(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,file = "hz.row.plot.Rdata")	
+	
 if(is.vector(.data2$x.sd)){
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
@@ -95,7 +98,7 @@ show.sd.data[is.na(show.sd.data)] <- 0
 
 }else{show.sd.data <- matrix(0,dim(row.plot.data))}
 
-if(is.matrix(.aov.new)){
+if(is.matrix(.aov.new)& length(.aov.new) >0){
 .aov.data		<- as.numeric(as.character(.aov.new[hz.merge.control(gsub(" ","",.aov.new[,1]),gsub(" ","",rownames(row.plot.data))),2]))
 }else{
 	.aov.data <- NA
@@ -129,7 +132,7 @@ gui.input$lineplot.beside  <- FALSE
 }
 
 
-
+.col <- hz.exp.des.parse.data2[,1]
 print("started plotting")
 #stop()
 	hz.row.plot(	x = row.plot.data,

@@ -69,6 +69,7 @@ gui.input$exp.design != "")){
 						temp.f <- min(.design[.design$Experiment == gsub(" ","",hz.exp.des.parse.data2[,2])[f],]$Order,na.rm = T)
 						order.vec <- c(order.vec,temp.f)
 					}
+					order.vec[is.infinite(order.vec)] <- max(order.vec[!is.infinite(order.vec)])+1
 
 
 				}else{
@@ -88,7 +89,6 @@ gui.input$exp.design != "")){
 			}else{
 				order.vec <- ""
 			}
-			
 			
 			if(as.logical(.data2$gui.input$raw ) & !all(c(gui.input$empai.sd,gui.input$calc.empai))){
 					temp.design.raw <- 5
@@ -122,9 +122,9 @@ gui.input$exp.design != "")){
 				.design.pch <- 1
 			}
 			
-			hz.exp.des.parse.data2[,1] <- .design.col
-			hz.exp.des.parse.data2[,3] <- .design.pch
-			hz.exp.des.parse.data2 <-cbind(hz.exp.des.parse.data2,order.vec)
+			try(hz.exp.des.parse.data2[,1] <- .design.col)	
+			try(hz.exp.des.parse.data2[,3] <- .design.pch)
+			try(hz.exp.des.parse.data2 <-cbind(hz.exp.des.parse.data2,order.vec))
 			
 		
 	}
