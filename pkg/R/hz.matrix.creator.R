@@ -544,7 +544,8 @@ if(1==1){
 								par(mar = c( 2.5, 3,4,1))
 		
 								if(length(lc) !=0 ){
-	
+							mcr[is.na(mcr)] <- 0
+
 									plot(lc,mcr,pch=20,cex = 1,col = .col.ramp,ylab = "MCR",xlab = "time in s",main = paste(add.main,unique(tolower(temp.s$rawfilename))[i]),mgp = c(1.5,0.5,0),xaxs = "r",	type	 = "n")
 						
 									points(lc,mcr,pch = 20,cex =  lc.size,col = .col.ramp,)

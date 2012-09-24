@@ -94,8 +94,8 @@ p.val[is.na(p.val)] <- 1
 
 te[data.log >	ratio.thres	& as.numeric(p.val[,3]) < gui.input$p.value] 		<- col.set[1]
 te[data.log < 	-ratio.thres	& as.numeric(p.val[,3]) < gui.input$p.value] 	<- col.set[2]
-te[data.log >	ratio.thres	& as.numeric(p.val[,5]) < gui.input$p.value] 		<- col.set[3]
-te[data.log < 	-ratio.thres	& as.numeric(p.val[,5]) < gui.input$p.value] 	<- col.set[4]
+te[data.log >	ratio.thres	& as.numeric(p.val[,4]) < gui.input$p.value] 		<- col.set[3]
+te[data.log < 	-ratio.thres	& as.numeric(p.val[,4]) < gui.input$p.value] 	<- col.set[4]
 
 counts <- aggregate(te,list(te),length)
 test <- apply(cbind(data.log,-log10(as.numeric(p.val[,3]))),1,function(x){

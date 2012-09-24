@@ -915,10 +915,10 @@ if(error.try == "try-error"){
 }	
 	
 	if(exists(".design")){
-try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,.design,file = paste(path2, foldername,"results-binary.Rdata",sep = "/"))								
+try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,.design,hz.script.plot.main.return,file = paste(path2, foldername,"results-binary.Rdata",sep = "/"))								
 )	
 }else{
-try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,file = paste(path2, foldername,"results-binary.Rdata",sep = "/")								
+try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,file = paste(path2, foldername,hz.script.plot.main.return,"results-binary.Rdata",sep = "/")								
 ))
 	}
 
