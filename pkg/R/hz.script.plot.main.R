@@ -278,5 +278,7 @@ print("Finished hz.script.heatmap2")
 
 backup <- .data2	
 }
+
+save.image("plot.data.Rdata")
 return(list(.report=.report, hz.cracker.anova.return= hz.cracker.anova.return))
 }

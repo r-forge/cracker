@@ -858,7 +858,6 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 	
 	
 
-	
 	#print(dim(pep.all.mean))
 	#print(unique(sam.id))
 	#print(length(rows))
@@ -1535,7 +1534,7 @@ print(temp.correct.value)
 
 	group.v <- 	temp.order
 		
-	}
+	}else{group.v <- NULL}
 	
 
 
@@ -2032,12 +2031,13 @@ sam.mean.phospho <- matrix()
 				sam.mean.phospho.sd	<- sam.sd[.phospho,]
 				sam.mean.sd			<- sam.sd[-.phospho,]
 				}
+				all.n.phospho.col <- all.n..col[.phospho,]
+				all.n..col <- all.n..col[-.phospho,]
 				
 				
 				}
 				
 			}
-
 
 		if(script.shape){
 			#input 				<- sam.mean
@@ -2066,7 +2066,13 @@ sam.mean.phospho <- matrix()
 
 			if(phospho & dim(sam.mean.phospho)[1] > 0){
 				sam.mean 	<- rbind(sam.mean.phospho,sam.mean)
-				#all.n..col  <- rbind()
+				
+			try.error<- class(try(sam.mean.sd <- rbind(sam.mean.phospho.sd, sam.sd)))			
+			if(try.error == "try-error"){
+				try(sam.mean.sd <- rbind(matrix(0,nrow = dim(sam.mean.phospho)[1],ncol = dim(sam.mean.phospho)[2])))
+			}
+			
+				all.n..col  <- rbind(all.n.phospho.col,all.n..col)
 			}
 			
 			#if(any(outlier != "NA" ,norm.tog.pep == FALSE) & row.norm == FALSE){

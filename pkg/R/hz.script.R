@@ -532,7 +532,7 @@ if(gui.input$plot.only == ""){
 	####
 	
 	# running hz.matrix.creator
-	gui.input$phospho.string <- "Phospho"
+	gui.input$phospho.string <- import.list$Modifications.identifier
 	
 	#gui.input$phospho <- TRUE
 	gui.input$build.matrix <- TRUE
@@ -540,8 +540,8 @@ if(gui.input$plot.only == ""){
 	if(gui.input$phospho){
 		gui.input$build.matrix <- TRUE
 		phospho.grep <- grep(gui.input$phospho.string ,.data$Modifications)
-		unphospho.pep			<- unique(paste(.data$code[phospho.grep],.data$sequence[phospho.grep],sep = "#")	)
-		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],sep = "#")
+		unphospho.pep			<- unique(paste(.data$code[phospho.grep],.data$sequence[phospho.grep],sep = "..")	)
+		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],sep = "..")
 	}
 	
 	
@@ -604,6 +604,7 @@ dev.off()
 }
 
 try(hz.write.unique.prots.seq(.data))
+save.image("test.Rdata")
 print(dim(.data))
 	.error <- class(try(
 	.data2 	<- hz.matrix.creator(	.data,
@@ -892,7 +893,7 @@ graphics.off()
 
 if(gui.input$phospho){
 	gui.input$phospho.string <- "Phospho"
-	error.try <- class(.error<- try(hz.script.phospho(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername,  colorblind.set, color.blind, hz.script.plot.main.return$hz.cracker.anova.return)))
+	error.try <- class(.error<- try(hz.script.phospho(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername,  colorblind.set, color.blind, hz.script.plot.main.return$hz.cracker.anova.return,plot.type,import.list)))
 	
 if(error.try == "try-error"){
 

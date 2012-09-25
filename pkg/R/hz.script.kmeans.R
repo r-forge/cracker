@@ -163,7 +163,7 @@ while(error.rep == "try-error"){
 		pdf(paste(cluster.name,"-lp.pdf",sep = ""),height = height.set, width = bp.width,pointsize= 18)
 	}else{
 		dir.create(.wd.set <- paste(cluster.name,"-eps",sep = ""))
-		setwd(.wd.set)
+		try(setwd(.wd.set))
 	}
 	
 	
@@ -318,6 +318,6 @@ graphics.off()
 
 
 try(setwd(.wd))
-
-return(list(kmeans.cluster.output = kmeans.cluster.output, kmeans.col = kmeans.col, kmeans.at = kmeans.at, kmeans.list= kmeans.list))
+print("finished hz.script.kmeans")
+try(return(list(kmeans.cluster.output = kmeans.cluster.output, kmeans.col = kmeans.col, kmeans.at = kmeans.at, kmeans.list= kmeans.list)))
 }
