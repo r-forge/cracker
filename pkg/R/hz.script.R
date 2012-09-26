@@ -541,7 +541,13 @@ if(gui.input$plot.only == ""){
 		gui.input$build.matrix <- TRUE
 		phospho.grep <- grep(gui.input$phospho.string ,.data$Modifications)
 		unphospho.pep			<- unique(paste(.data$code[phospho.grep],.data$sequence[phospho.grep],sep = "..")	)
+		
+		if(all(is.na(.data$Modified.Sequence))){
 		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],sep = "..")
+		}else{
+		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$Modified.Sequence,gui.input$phospho.string,sep = "..")
+	
+		}
 	}
 	
 	

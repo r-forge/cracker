@@ -1,7 +1,7 @@
 Package: cRacker
 Type: Package
 Title: R-script suite for automated processing of proteomic peptide lists
-Version: 1.486
+Version: 1.487
 Date: 2012-07-04
 Author: Henrik Zauber
 Maintainer: Henrik Zauber <Zauber@mpimp-golm.mpg.de>

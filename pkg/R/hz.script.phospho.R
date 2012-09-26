@@ -148,6 +148,7 @@ try(hz.script.graph(.data2,gui.input,prog.max,pb,ui))
 
 					
 					
-}else{write.csv("No intersecting proteins available for comparissons.","readme.txt")}
-}else{write.csv("No Phosphopeptides detectable.")}
+}else{#try(write.csv("No intersecting proteins available for comparissons.","./phosphopeptides-protein-reference/readme.txt"))
+	}
+}else{try(write.csv("No Phosphopeptides detectable.","readme.txt"))}
 }
