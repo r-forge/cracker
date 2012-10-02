@@ -857,6 +857,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 	pep.all.mean			<- apply(pep.all.mean,2,as.numeric)
 	
 	
+	
 
 	#print(dim(pep.all.mean))
 	#print(unique(sam.id))
@@ -881,6 +882,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 	if(calc.empai){
 		write.csv(pep.all.mean,"n-peptides.csv")
 	}
+	rpn.start.peptide.matrix <- pep.all.mean
 	
 	
 	
@@ -2128,6 +2130,7 @@ sam.mean.phospho <- matrix()
 			data.sd		<- c()
 			data.sd.rel <- c()
 			data.n		<- c()
+			data.top3.rpn <- c()
 			
 			acc.temp 	<- strsplit(rownames(sam.mean),"#", fixed = TRUE)
 			acc 		<- c()
@@ -2202,13 +2205,28 @@ sam.mean.phospho <- matrix()
 
 				}
 				
-					temp.o <- temp.o 
+				###### module for bsa test absolute values
+				temp.3 			<- temp.i
+				temp.3.test 	<- temp.3[order(temp.3,decreasing = TRUE)]
+				temp.3.test  	<- temp.3.test[!is.na(temp.3.test)]
+				temp.3.test 	<- temp.3.test[1:3]
+				temp.3[setdiff(1:length(temp.3),grep(paste(temp.3.test,collapse = "|"),temp.3))] <- NA
+				if(merge.method == "mean"){
+							temp.3.mean <- mean(as.numeric(as.matrix(temp.3)),na.rm = TRUE)}
+if(merge.method == "median"){
+							temp.3.mean <- median(as.numeric(as.matrix(temp.3)),na.rm = TRUE)}
+
+				
+				
+							temp.o <- temp.i 
 								
 							temp.aov  <- temp.o[!is.na(temp.o)]
 							temp.aov2 <- rep(as.character(x[1]),length(temp.aov))
 							temp.aov3 <- rep(experiment[i],length(temp.aov))
 							aov.data.2 <- cbind(temp.aov2,temp.aov3,temp.aov)
 
+							
+							
 							
 							if(merge.method == "mean"){
 							temp.o.mean <- mean(as.numeric(as.matrix(temp.o)),na.rm = TRUE)}
@@ -2222,42 +2240,49 @@ sam.mean.phospho <- matrix()
 							if(merge.method != "sum"){
 								temp.o.sd		<- sd(as.numeric(as.matrix(temp.o)),na.rm = TRUE)
 							}else{temp.o.sd <- NA}
-						
+							
+							temp.o.count 	<- length(temp.o[!is.na(temp.o)|temp.o == 0]) 
+							
+							
 							temp.o.sd.rel	<- temp.o.sd/temp.o.mean 
 							
 							number.o		<- length(as.numeric(temp.o)[!is.na(temp.o)])
 							
-							data <- c(as.character(x[1]),temp.o.mean,temp.o.sd,temp.o.sd.rel,number.o)
-							names(data) <- c("Acc","mean","sd","rel.sd","n")
+							data <- c(as.character(x[1]),temp.o.mean,temp.o.sd,temp.o.sd.rel,number.o,temp.3.mean)
+							names(data) <- c("Acc","mean","sd","rel.sd","n","top3")
 							data <- list(data = data,aov= aov.data.2)
 							return(data)
-						}		
+			}# from apply loop		
 						))
 			data.all 	<- c()
 			data.aov.all <- c()
-
 			for(o in 1:  length(unique(acc))){
 				temp.o.data <- data.i[[o]][[1]]
 				data.all 	<- rbind(data.all,temp.o.data)
 				temp.o.aov 	<- data.i[[o]][[2]]
 				data.aov.all<- rbind(data.aov.all,temp.o.aov)
+						
 			}
 			
-			data.i 		<- data.all			
+			data.i 		<- data.all	
+					
 			#stop()	
 			aov.data.2 	<- rbind(aov.data.2,data.aov.all)
 						
 			data.mean 	<- cbind(data.mean,data.i[,2])
 			data.sd 	<- cbind(data.sd,data.i[,3])
 			data.sd.rel <- cbind(data.sd.rel,data.i[,4])
-			all.n..col		<- cbind(all.n..col,data.i[,5])
-		
+			all.n..col	<- cbind(all.n..col,data.i[,5])
+			data.top3.rpn 	<- cbind(data.top3.rpn,data.i[,6])
+
 			
 		}
 		all.n..col <- as.matrix(all.n..col)
 		sam.sd 		<- data.sd.rel
 		sam.mean 	<- data.mean
 	}
+	
+	
 	print("hurray")
 	# -- give names --
 
@@ -2267,6 +2292,7 @@ sam.mean.phospho <- matrix()
 		sam.sd 				<- as.matrix(sam.sd)
 		colnames(sam.sd) 	<- paste("SD",unique(.col.all))
 		rownames(sam.sd) 	<- unique(choosen.proteins)
+			
 	}
 		
 	if(Raw == FALSE){
@@ -2275,8 +2301,7 @@ sam.mean.phospho <- matrix()
 		sam.sd 				<- as.matrix(sam.sd)
 		colnames(sam.sd) 	<- paste("SD" ,unique(temp.my$sam_id),unique(temp.my$sam_name))
 		rownames(sam.sd) 	<- unique(choosen.proteins)
-	
-	
+
 	
 	}	
 	all.n..col 				<- as.matrix(all.n..col)
@@ -2461,7 +2486,8 @@ if(all(outlier == "NA" & norm.tog.pep == FALSE) | 1==1){
 		try(used.peptides <- hz.shape(write.pep.all.mean.n,shape = shape,group.shape)$shape)
 
 	if(!exists("info.data.matrix")){info.data.matrix <- "not collected"}
-
+	if(!exists(data.top3.rpn)){		data.top3.rpn <- NULL
+	}
 	return(list(	x=sam.mean, 
 					x.sd =sam.sd,
 					peptidelist=write.pep.all.mean.n,
@@ -2473,7 +2499,8 @@ if(all(outlier == "NA" & norm.tog.pep == FALSE) | 1==1){
 					aov.export.1 = aov.export.1, 
 					aov.export.2 = aov.export.2, 
 					mod.peptides.experiment = temp.e.mod.mean.m,
-					exp.design = exp.set
+					exp.design 	= exp.set,
+					rpn 		= rpn.start.peptide.matrix 
 					))
 }
 }

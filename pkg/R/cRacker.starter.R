@@ -39,7 +39,7 @@ try(biocLite("pcaMethods"))
 cat("Loading pcaMethods:\n")
 try(library("pcaMethods"))
 
-.packages <- c("tcltk2","gplots"
+.packages <- c("tcltk2","gplots","bitops"
 #,"igraph",
 #"plotrix",
 ,"gtools"

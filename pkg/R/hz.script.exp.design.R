@@ -105,8 +105,9 @@ gui.input$exp.design != "")){
 				temp.i <- unique(.design.uni[temp.i == .design.uni[,1],])
 				
 				if(length(temp.i[,1]) >1){
-					temp.i[,2] <- sum(temp.i[,2])
+					#temp.i[,2] <- sum(temp.i[,2])
 					temp.i		<- temp.i[1,]
+					print(paste("error in exp.design:",temp.i))
 				}
 				.design.pch <-c(.design.pch, temp.i[,2])
 		
@@ -120,6 +121,7 @@ gui.input$exp.design != "")){
 				}
 			}else{
 				.design.pch <- 1
+				.design.col <- rgb(0,133,178,max = 255)
 			}
 			
 			try(hz.exp.des.parse.data2[,1] <- .design.col)	

@@ -159,13 +159,19 @@ if(length(volcano.info.add) == dim(volcano.output)[1]){
 }
 
 write.csv(volcano.output,file = "volcano-data.csv") 
-signi.volcano.output <- volcano.output[(as.numeric(volcano.output[,3]) < -ratio.thres | as.numeric(volcano.output[,3]) > ratio.thres ) & as.numeric(volcano.output[,4]) < gui.input$p.value	
-,]
+try(signi.volcano.output <- volcano.output[(as.numeric(volcano.output[,3]) < -ratio.thres | as.numeric(volcano.output[,3]) > ratio.thres ) & as.numeric(volcano.output[,4]) < gui.input$p.value	
+,])
+if(exists("signi.volcano.output")){
 
-na.row.exclude <- apply(signi.volcano.output,1,function(x){all(is.na(x))})
+try(na.row.exclude <- apply(signi.volcano.output,1,function(x){all(is.na(x))}))
+if(!exists("na.row.exclude")){na.row.exclude <- NULL}
+if(length(na.row.exclude) > 0){
 print(dim(signi.volcano.output[!na.row.exclude,]))
 write.csv(signi.volcano.output[!na.row.exclude,],"volcano-signi-data-p-value-uncorrected.csv")
+}
+}
 unlink("ttest-pvalues.csv")
+
 }
 
 setwd(.wd)
