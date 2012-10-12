@@ -4,7 +4,6 @@ require("tcltk2")
 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
 
 
-
 path2 			<-	normalizePath(path2.set$path)
 	ratio.prog <- 10000
 path1 			<- normalizePath(path1)

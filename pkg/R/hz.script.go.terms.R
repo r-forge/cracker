@@ -1,5 +1,6 @@
 hz.script.go.terms <-
 function(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,kmeans.list,prog.max,pb,ui,plot.type,.col,colorblind.set,color.blind, backup.go.input.agg){
+		save(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,kmeans.list,prog.max,pb,ui,plot.type,.col,colorblind.set,color.blind, backup.go.input.agg,file = "mapping.Rdata")
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 	########## GUI 
@@ -57,6 +58,8 @@ print("Finished Loading mapping library")
 #.data.cluster <- read.csv("/Users/cRacker-DEMO/henrik/sterol-stuff/DRM/20100925-DRM-Mg/ms-analysis--raw-csv-2011-02-01/signi-kmeans-cluster.csv", stringsAsFactors = FALSE)
 
 .go[,1] <- tolower(.go[,1])
+.go[,3] <- paste("mapping.",.go[,3],sep = "")
+
 
 .data.cluster <- as.matrix(kmeans.cluster.output)
 .data.cluster <- cbind(rownames(.data.cluster),.data.cluster)
@@ -105,7 +108,6 @@ if(length(grep.prot) != 0){
 compare.to.all <- TRUE
 	
 .go.data.cluster	<- .go[grep.prot,]
-
 
 
 a.input <- unique(.go[,3])
@@ -254,7 +256,7 @@ if(dim(go.input)[1] !=0){
 			a.p.value.test <- rbind(a.p.value.test, cbind(temp.b.mapp,b))
 			
 			
-			colnames(b.p.value) <- c("mapping","n","p","ratio","cluster","GO-type","proteins")
+			colnames(b.p.value) <- c("mapping","n","p","ratio","cluster","type","proteins")
 			
 			b.p.value <- b.p.value[order(b.p.value[,1]),]
 			b.p.value <- b.p.value[order(as.numeric(as.character(b.p.value[,4]))),]
@@ -381,7 +383,7 @@ graphics.off()
 }
 
 a.p.value <- cbind(a.p.value[,c(1,2,3)],p.adjust(as.numeric(a.p.value[,3]),method = gui.input$p.adjust),log2(as.numeric(as.character(a.p.value[,4]))),a.p.value[,c(4,5,6,7)])
-colnames(a.p.value) <- c("GO","n","p .unadjusted",paste("p.adjusted",gui.input$p.adjust,sep ="."),"occurence.ratio.log2","occurence.ratio","cluster","type","proteins")
+colnames(a.p.value) <- c("Mapping","n","p .unadjusted",paste("p.adjusted",gui.input$p.adjust,sep ="."),"occurence.ratio.log2","occurence.ratio","cluster","type","proteins")
 
 
 write.csv(a.p.value,"mapped-data.csv")
@@ -427,7 +429,7 @@ for(i in 1:length(unique(a.p.value.test[,1]))){
 	temp.i <- unique(a.p.value.test[,1])[i]
 	temp.mappings  <- a.p.value.test[a.p.value.test[,1] == temp.i,]
 	multi.map <-	multi.mapping.wrapper(temp.mappings, unique(a.p.value.test[,3]))
-			
+
 	grep.i <- grep(temp.i, .data2$proteinlist.info[,2])
 	temp.info <- .data2$proteinlist.info[grep.i,]	
 

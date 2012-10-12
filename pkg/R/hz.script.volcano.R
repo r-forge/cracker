@@ -1,7 +1,7 @@
 hz.script.volcano <-
-function(.data2,gui.input,extented.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui){
+function(.data2,gui.input,extended.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui){
 
-#save(.data2,gui.input,extented.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui,file = "volcanotemp.rdata")
+save(.data2,gui.input,extended.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui,file = "volcanotemp.rdata")
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 	
@@ -83,7 +83,7 @@ test2 	<- test2[order(test2[,2]),]
 
 te <- rep(1,length(data.log))
 
-col.set <- c("pink","lightblue","2","4")
+col.set <- c("pink","lightblue",rgb(213,94,0,maxColorValue=255),rgb(0,114,178,maxColorValue=255))
 
 if(colorblind.set){
 	#col.set <-unlist(color.blind)[c(2,4,5,7)]
@@ -147,19 +147,32 @@ if(length(volcano.output) != 0){
 
 colnames(volcano.output)	<-	c("samples","accession","ratio","ttest.p.value",paste("p.value",gui.input$p.adjust.method,"corrected",sep = "."),"ttest.type") 
 #test <- merge(signi.double,info[,c(1,4)],by = 1)
-if(!exists("extended.info")){
-extended.info 		<- .data2$proteinlist.info
-volcano.info.add 	<- hz.merge.control(as.character(extended.info[,colnames(extended.info) == "code"]),tolower(volcano.output[,2]))
-}
-volcano.info.add <- hz.merge.control(as.character(extended.info[,colnames(extended.info) == "code"]),tolower(volcano.output[,2]))
 
+if(!exists("extended.info")|1==1){
+	
+grep.extended.info <- list.files(.wd,pattern = "protein.mapping.csv",full.names = T)	
+
+	if(length(grep.extended.info) ==1){
+		extended.info <- read.csv(grep.extended.info,stringsAsFactors = F)
+		#extended.info <- extended.info[,-1]
+	}else{
+	
+	extended.info 		<- .data2$proteinlist.info
+	}
+#volcano.info.add 	<- hz.merge.control(as.character(extended.info[,colnames(extended.info) == "code"]),tolower(volcano.output[,2]))
+
+
+}
+
+volcano.info.add <- hz.merge.control(as.character(extended.info[,colnames(extended.info) == "code"]),tolower(volcano.output[,2]))
 
 if(length(volcano.info.add) == dim(volcano.output)[1]){
 	volcano.output  <- cbind(volcano.output , extended.info[volcano.info.add,-1])
 }
 
+
 write.csv(volcano.output,file = "volcano-data.csv") 
-try(signi.volcano.output <- volcano.output[(as.numeric(volcano.output[,3]) < -ratio.thres | as.numeric(volcano.output[,3]) > ratio.thres ) & as.numeric(volcano.output[,4]) < gui.input$p.value	
+try(signi.volcano.output <- volcano.output[as.numeric(as.character(volcano.output[,3])) < -ratio.thres | as.numeric(as.character(volcano.output[,3])) > ratio.thres  & as.numeric(as.character(volcano.output[,4])) < gui.input$p.value	
 ,])
 if(exists("signi.volcano.output")){
 
@@ -169,8 +182,13 @@ if(length(na.row.exclude) > 0){
 print(dim(signi.volcano.output[!na.row.exclude,]))
 write.csv(signi.volcano.output[!na.row.exclude,],"volcano-signi-data-p-value-uncorrected.csv")
 }
+if(dim(signi.volcano.output)[1] > 0){
+try(hz.volcano.mapping.barplot(signi.volcano.output,gui.input))
+}
 }
 unlink("ttest-pvalues.csv")
+#stop()
+
 
 }
 

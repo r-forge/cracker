@@ -51,6 +51,7 @@ function(
 	prog.max,pb,
 	.length.matrix
 ){
+	
 # Init progress bar if not done yet
 print("start matrix.creator function")
 library(grid)
@@ -1593,7 +1594,6 @@ print(temp.correct.value)
 				ratio.prog 			<- prog.max/length(unique(sequences.temp))
 			}
 
-			time1 <- Sys.time()
 			if(1==1){
 				test <- 	apply(as.matrix(cbind(unique(sequences.temp),1:length(unique(sequences.temp)))),1,function(x){
 					pb.check <- class(try(ui$setProgressBar(pb, as.numeric(x[2])*ratio.prog, label=paste("Pep.Red.Exclu.:", round(as.numeric(x[2])/length(unique(sequences.temp))*100),  "% done"))))
@@ -1608,7 +1608,6 @@ print(temp.correct.value)
 			
 			}
 
-			time2 <- Sys.time()
 			print(time2-time1)
 			test <- test[!test==""]
 			if(length(test) != 0){
@@ -2131,158 +2130,70 @@ sam.mean.phospho <- matrix()
 			data.sd.rel <- c()
 			data.n		<- c()
 			data.top3.rpn <- c()
-			
+			aov.data.2 <- c()
 			acc.temp 	<- strsplit(rownames(sam.mean),"#", fixed = TRUE)
 			acc 		<- c()
+
 			for( i in 1:dim(sam.mean)[1]){
 				acc <- c(acc,acc.temp[[i]][1])
 			}
-			#stop()
+			uni.acc <- 	unique(acc)
+			sys1 <- Sys.time()
+			
+			ratio.prog <- prog.max/(length(unique(names..col))*length(uni.acc))
+			assign("cracker.counter.temp",1,envir = .GlobalEnv)
+			assign("cracker.ratio.prog.temp",ratio.prog,envir = .GlobalEnv)
+
 			
 			for( i in 1:length(unique(names..col))){
 				temp 		<- as.matrix(sam.mean[,names..col == unique(names..col)[i]])
 				
-				temp.mean.i			<- c()
-				temp.mean.sd		<- c()
-				temp.mean.sd.rel	<- c()
-	
-				data.i <- 	t(apply(as.matrix(cbind(unique(acc),c(1:length(unique(acc))))),1,function(x){
-					
-				ratio.prog 	<- prog.max/length(unique(acc))
+				test		<- as.matrix(aggregate(as.vector(temp),list(rep(acc,dim(temp)[2])),function(x){x <- hz.agg.fun(x,outlier,row.norm,merge.method,ui,pb,prog.max,c(i,length(unique(names..col))))}))
+				test.order  <- hz.merge.control(test[,1],uni.acc)
+
+
+				temp.split <- strsplit(test[,8],"#",fixed = T)
+				aov.data <- c()
+				for(s in 1:dim(test)[1]){
+						temp.s <- as.numeric(temp.split[[s]])
+						temp.s <- temp.s[!is.na(temp.s)]
+						#print(s)
+						if(length(temp.s) > 0){
+						temp.s <- cbind(test[s,1],unique(names..col)[i],as.matrix(temp.s))
+						aov.data <- rbind(aov.data,temp.s)
+						}
+				}
+print(i)
+
+				data.mean 	<- cbind(data.mean,test[test.order,3])
+				data.sd 	<- cbind(data.sd,test[test.order,4])
+				data.sd.rel <- cbind(data.sd.rel,test[test.order,5])
+				all.n..col	<- cbind(all.n..col,test[test.order,6])
+				data.top3.rpn 	<- cbind(data.top3.rpn,test[test.order,7])
+				aov.data.2 <- rbind(aov.data.2,aov.data)
+				
+			ratio.prog 	<- prog.max/length(unique(names..col))
 								
-				########## GUI 
-				pb.check <- class(try(ui$setProgressBar(pb,as.numeric(x[2])*ratio.prog, label=paste(i,"\\",length(unique(names..col)),"Peptide-Mean",round(as.numeric(x[2])/length(unique(acc))*100, 0),"% done"))))
+			########## GUI 
+				pb.check <- class(try(ui$setProgressBar(pb,i*ratio.prog, label=paste(i,"\\",length(unique(names..col)),"Peptide-Mean",round(as.numeric(i)/length(unique(acc))*100, 0),"% done"))))
 	
 				while(pb.check == "try-error"){
 					print("Warning: User closed window!")
 					pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
-					pb.check <- class(try(ui$setProgressBar(pb,as.numeric(x[2])*ratio.prog, label=paste(i,"\\",length(unique(names..col)),"Peptide-Mean",round(as.numeric(x[2])/length(unique(acc))*100, 0),"% done"))))
+					pb.check <- class(try(ui$setProgressBar(pb,as.numeric(i)*ratio.prog, label=paste(i,"\\",length(unique(names..col)),"Peptide-Mean",round(as.numeric(x[2])/length(unique(acc))*100, 0),"% done"))))
 				}
 			##############
-				temp.o		<- grep(x[1],rownames(temp),fixed = TRUE)
-				temp.o		<- temp[temp.o,]
-				
-				temp.i <- 			temp.o
-								
-				if(outlier == "row"& row.norm == TRUE) {
-											
-						box.temp.t	<- boxplot.stats(as.numeric(temp.i))$out
-						for(r in 1:length(box.temp.t)) {
-							temp.r <- box.temp.t[r]
-							temp.i[temp.i == temp.r] <- NA
-						}
-						
-						if(length(box.temp.t) != 0) {
-							box.ex <-1
-						} else {
-							box.ex <- NA
-						}
-								
-				}
-				
-				if(outlier == "all.below" &  row.norm == FALSE) {
-					temp.t		<- temp.i
-					box.temp.t	<- boxplot.stats(as.numeric(temp.t))$out
-					box.temp.t	<- box.temp.t[box.temp.t < median(as.numeric(temp.i),na.rm = TRUE)]
-					for(r in 1:length(box.temp.t)) {
-						temp.r <- box.temp.t[r]
-						temp.t[temp.t == temp.r] <- NA
-					}
-					if(length(box.temp.t) != 0){
-						box.ex <- box.ex + 1
-					} else {
-						box.ex <- NA
-					}
-					temp.i <- temp.t
-				}
-				
-				if(outlier == "top.3"){
-				temp.i.test 	<- temp.i[order(temp.i,decreasing = TRUE)]
-				temp.i.test  	<- temp.i.test[!is.na(temp.i.test)]
-				temp.i.test 	<- temp.i.test[1:3]
-
-				temp.i[setdiff(1:length(temp.i),grep(paste(temp.i.test,collapse = "|"),temp.i))] <- NA
-
-				}
-				
-				###### module for bsa test absolute values
-				temp.3 			<- temp.i
-				temp.3.test 	<- temp.3[order(temp.3,decreasing = TRUE)]
-				temp.3.test  	<- temp.3.test[!is.na(temp.3.test)]
-				temp.3.test 	<- temp.3.test[1:3]
-				temp.3[setdiff(1:length(temp.3),grep(paste(temp.3.test,collapse = "|"),temp.3))] <- NA
-				if(merge.method == "mean"){
-							temp.3.mean <- mean(as.numeric(as.matrix(temp.3)),na.rm = TRUE)}
-if(merge.method == "median"){
-							temp.3.mean <- median(as.numeric(as.matrix(temp.3)),na.rm = TRUE)}
-
 				
 				
-							temp.o <- temp.i 
-								
-							temp.aov  <- temp.o[!is.na(temp.o)]
-							temp.aov2 <- rep(as.character(x[1]),length(temp.aov))
-							temp.aov3 <- rep(experiment[i],length(temp.aov))
-							aov.data.2 <- cbind(temp.aov2,temp.aov3,temp.aov)
-
-							
-							
-							
-							if(merge.method == "mean"){
-							temp.o.mean <- mean(as.numeric(as.matrix(temp.o)),na.rm = TRUE)}
-							
-							if(merge.method == "sum"){
-							temp.o.mean <- sum(as.numeric(as.matrix(temp.o)),na.rm = TRUE)}
-							
-							if(merge.method == "median"){
-							temp.o.mean <- median(as.numeric(as.matrix(temp.o)),na.rm = TRUE)}
 				
-							if(merge.method != "sum"){
-								temp.o.sd		<- sd(as.numeric(as.matrix(temp.o)),na.rm = TRUE)
-							}else{temp.o.sd <- NA}
-							
-							temp.o.count 	<- length(temp.o[!is.na(temp.o)|temp.o == 0]) 
-							
-							
-							temp.o.sd.rel	<- temp.o.sd/temp.o.mean 
-							
-							number.o		<- length(as.numeric(temp.o)[!is.na(temp.o)])
-							
-							data <- c(as.character(x[1]),temp.o.mean,temp.o.sd,temp.o.sd.rel,number.o,temp.3.mean)
-							names(data) <- c("Acc","mean","sd","rel.sd","n","top3")
-							data <- list(data = data,aov= aov.data.2)
-							return(data)
-			}# from apply loop		
-						))
-			data.all 	<- c()
-			data.aov.all <- c()
-			for(o in 1:  length(unique(acc))){
-				temp.o.data <- data.i[[o]][[1]]
-				data.all 	<- rbind(data.all,temp.o.data)
-				temp.o.aov 	<- data.i[[o]][[2]]
-				data.aov.all<- rbind(data.aov.all,temp.o.aov)
-						
 			}
-			
-			data.i 		<- data.all	
-					
-			#stop()	
-			aov.data.2 	<- rbind(aov.data.2,data.aov.all)
-						
-			data.mean 	<- cbind(data.mean,data.i[,2])
-			data.sd 	<- cbind(data.sd,data.i[,3])
-			data.sd.rel <- cbind(data.sd.rel,data.i[,4])
-			all.n..col	<- cbind(all.n..col,data.i[,5])
-			data.top3.rpn 	<- cbind(data.top3.rpn,data.i[,6])
-
-			
-		}
+		colnames(aov.data.2) <- c("accession","experiment","intensity")
 		all.n..col <- as.matrix(all.n..col)
 		sam.sd 		<- data.sd.rel
 		sam.mean 	<- data.mean
 	}
 	
-	
+	sys2 <- Sys.time()
 	print("hurray")
 	# -- give names --
 
