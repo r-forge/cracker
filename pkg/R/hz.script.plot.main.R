@@ -1,6 +1,7 @@
 hz.script.plot.main <-
 function(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind){
 	.report <- list()
+	save(hz.exp.des.parse.data2,file = "test2.Rdata")
 	#save(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind,file = "script.plot.main.Rdata")
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 for(plot.type in 1:plot.loop){

@@ -841,6 +841,7 @@ exp.design <- .data2$exp.des
 }
 set.seed(2)
 
+save(exp.design,gui.input,colorblind.set,color.blind,.data2, file = "exp.design.Rdata")
 error.try <- class(.error	<- try(results.script.exp.design<- hz.script.exp.design(exp.design = exp.design,gui.input = gui.input, colorblind.set = colorblind.set, color.blind = color.blind,.data2)))
 try(.col 						<- results.script.exp.design$.col)
 try(hz.exp.des.parse.data2  	<- results.script.exp.design$hz.exp.des.parse.data2)
@@ -888,7 +889,7 @@ if(!gui.input$color.plots & gui.input$barpl){
 assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
 error.try <- class(.error<- try(hz.script.plot.main.return <-  hz.script.plot.main(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername=foldername, colorblind.set= colorblind.set, color.blind = color.blind)))
 
-
+print(hz.exp.des.parse.data2)
 if(error.try == "try-error"){
 		tkmessageBox(title="Message",message=paste("Error in plotting!",.error),icon="warning",type="ok")
 	
