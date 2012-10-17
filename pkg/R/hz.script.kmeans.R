@@ -1,6 +1,8 @@
 hz.script.kmeans <-
-function(.data2,gui.input,.design, y.lab.input,colorblind.set,color.blind,plot.clustering,.col,prog.max,pb,ui){
-	
+function(.data2,gui.input,.design, y.lab.input,colorblind.set,color.blind,plot.clustering,.col,prog.max,pb,ui=ui){
+if(!exists(".design")){
+	#.design <- "NA"
+}
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 ######
@@ -142,7 +144,6 @@ while(error.rep == "try-error"){
 	}
 }
 
-
 	if(gui.input$hclust.groups){
 		cluster.name <- paste("hclust-",centers,sep = "")
 		
@@ -152,6 +153,14 @@ while(error.rep == "try-error"){
 	
 	colnames(kmeans.cluster.output) <- "cluster"
 	write.csv(kmeans.cluster.output,paste(cluster.name,".csv",sep = ""))
+	
+	try(temp.info <- .data2$proteinlist.info[hz.merge.control(.data2$proteinlist.info[,2],rownames(kmeans.cluster.output)),])
+	if(exists("temp.info")){
+		if(dim(temp.info)[1] == dim(kmeans.cluster.output)[1]){
+		temp.kmeans.cluster.output	<- cbind(kmeans.cluster.output,temp.info)
+		try(write.csv(temp.kmeans.cluster.output,paste(cluster.name,".csv",sep = "")))
+		}
+	}
 	
 	bp.width <- 9
 	if(dim(k.data)[2] > 15){
@@ -180,11 +189,12 @@ while(error.rep == "try-error"){
 		
 		temp.i 	<- as.matrix(kmeans.cluster.output[,1][kmeans.cluster.output[,1] == i])
 		temp.merge	<-	merge(as.matrix(temp.i),k.data,by = 0)
+		
 		temp.merge 	<-  temp.merge[,-c(1,2)]
 		norm.k.x <- max(nchar(colnames(temp.merge)))
 		kmeans.list[[i]] <- as.matrix(temp.merge)
 		kmeans.at[[i]] 	 <- 1:length(colnames(temp.merge))
-	
+
 	if(norm.k.x > 8){norm.k.x <- (norm.k.x-8)/2}
 	
 	par(oma = c(norm.k.x,0.1,0.1,0.1))
@@ -230,7 +240,7 @@ if(gui.input$time.grouped&gui.input$exp.design != ""){
 	kmeans.col  <- hz.script.kmeans.timeplots.return$kmeans.col
 	
 }else{
-	print(dim(t(temp.merge[order.test,])))
+	#print(dim(t(temp.merge[order.test,])))
 	matplot(t(temp.merge[order.test,]) ,type = "n",main = paste("cluster",i,"\n", length(temp.i),"proteins"),axes = FALSE,xlab = "",ylab = y.lab.input,col = sum.test[order.test],pch = 16,lwd = 1.5 ,cex.lab = 0.6#,ylim = range(k.data.NA)
 	)
 	grid(lwd = 2)

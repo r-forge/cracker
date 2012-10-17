@@ -61,8 +61,6 @@ function(	x,					# matrix, should contain numeric values
 
 	for(group.i in 1:length(unique(group))){
 		temp.group <- group ==unique(group)[group.i]
-print("double")
-print(unique(group))
 
 		if(margin == 1){
 			if(length(group) != dim(backup)[2]){print("ALARM");stop()}

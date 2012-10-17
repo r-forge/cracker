@@ -89,12 +89,6 @@ colnames(tes) <- c("peptide.species","code","description","score","calibrated.ma
 			
 		}
 	}
-		
-#print(temp.i.best)
-#temp.i.best <- as.character(temp.i.best)
-#print(temp.i.best)
-#stop()
-print(dim(temp.i.best))
 temp.i.best <- as.character(unlist(temp.i.best))
 if(length(temp.i.best) !=7){
 	l.temp <- 7-length(temp.i.best)

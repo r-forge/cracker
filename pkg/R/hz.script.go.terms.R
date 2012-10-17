@@ -1,6 +1,5 @@
 hz.script.go.terms <-
 function(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,kmeans.list,prog.max,pb,ui,plot.type,.col,colorblind.set,color.blind, backup.go.input.agg){
-		save(.data2, kmeans.cluster.output, info.add,gui.input,kmeans.col,kmeans.at,kmeans.list,prog.max,pb,ui,plot.type,.col,colorblind.set,color.blind, backup.go.input.agg,file = "mapping.Rdata")
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 	########## GUI 
@@ -460,6 +459,7 @@ for(i in 1:length(unique(a.p.value.test[,1]))){
 
 }
 
+print("Tut")
 
 if(dim(multi.map.matrix)[1]== dim(info.add)[1]){
 	extended.info <- cbind(multi.map.matrix,info.add)
@@ -480,6 +480,7 @@ write.csv(extended.info,"protein.mapping.csv")
 
 
 }else{
+	extended.info <- "NA"
 print("Search for GO Terms failed.\nCheck if your Accessions are compatible with loaded GO library!")
 }
 print("Done")

@@ -1,8 +1,11 @@
 hz.script.plot.main <-
 function(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind){
+	save(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind,file = "script.plot.main.Rdata")
+	
+	
 	.report <- list()
-	save(hz.exp.des.parse.data2,file = "test2.Rdata")
-	#save(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind,file = "script.plot.main.Rdata")
+
+
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 for(plot.type in 1:plot.loop){
 
@@ -74,7 +77,7 @@ for(plot.type in 1:plot.loop){
 		if(dim(.data2$x)[1]== 1){
 			write("Only one protein with significant changes, plot error!","Error.txt")
 			write.csv(t(as.matrix(.data2$proteinlist.info)),"protein.csv")
-			write.csv(t(as.matrix(.data2$x.sd)),"protein-sd.csv")
+			write.csv(t(as.matrix(.data2$x.sd)),"protein-relative-sd.csv")
 		}
 	}	
 
@@ -280,6 +283,5 @@ print("Finished hz.script.heatmap2")
 backup <- .data2	
 }
 
-save.image("plot.data.Rdata")
 return(list(.report=.report, hz.cracker.anova.return= hz.cracker.anova.return))
 }

@@ -1,7 +1,6 @@
 hz.script.volcano <-
 function(.data2,gui.input,extended.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui){
 
-save(.data2,gui.input,extended.info, colorblind.set,color.blind,hz.cracker.anova.return,prog.max,pb,ui,file = "volcanotemp.rdata")
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
 	

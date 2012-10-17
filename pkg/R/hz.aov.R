@@ -9,7 +9,6 @@ rm(input.all.list)
 x 		<- as.data.frame(x, stringsAsFactors = FALSE)
 
 if(!is.na(max(as.numeric(x[,2],na.rm = T)))){
-	print("re")
 x[,2] <- colnames(.data2$x)[as.numeric(x[,2])]
 	
 	
@@ -69,7 +68,6 @@ if(progressbar ){
 	}else{
 		.aov.true <- FALSE
 		temp.i 				<- t(as.data.frame(temp.i))
-		#print(dim(temp.i))
 		rownames(temp.i) 	<- 1
 	}
 
@@ -83,20 +81,16 @@ if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.
 	temp.aov 	<- aov(as.numeric(temp.i.aov$intensity)~ as.factor(temp.i.aov$experiment))
 	
 assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
-#print(temp.i.aov)
-print("start agg1")
 
 	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
 			#print(temp.agg)
-print("end agg1")
 	
 	
 	temp.agg <- temp.agg[temp.agg[,2] < 2,1]
 	oneside.ttest <- c()
 	if(length(temp.agg) !=0 ){
-		print("oneside-ttest")
 	oneside.ttest <- hz.oneside.ttest(temp.i.aov)
-	print(oneside.ttest)
+	#print(oneside.ttest)
 	temp.exclu	<- grep(paste(temp.agg,collapse = "|"),temp.i.aov[,1])
 	temp.i.aov 		<- temp.i.aov[-temp.exclu,]
 	}
@@ -117,16 +111,13 @@ print("end agg1")
 	#temp.i.aov <- temp[-9,]
 
 	#print(temp.i.aov)
-			print(dim(temp.i.aov))
 
-	print("start agg2")
 	if(dim(temp.i.aov)[1] == 0){
 		temp.i.aov <- t(as.matrix(c(NA,NA)))
-				print(dim(temp.i.aov))
+				#print(dim(temp.i.aov))
 
 	}
 	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
-	print("end agg2")
 
 	
 		#assign("temp.type.test",type.test,envir = .GlobalEnv)
@@ -227,7 +218,6 @@ print("end agg1")
 		}
 		exp.des <- cbind(.data2$exp.design[, run.type],1:length(.data2$exp.design[, run.type]))
 		exp.des <- rbind(c("name","alias"),exp.des)
-		print(exp.des)
 			count <- count+1
 			alias <- 1/(dim(exp.des)[1]+2) 
 			alias <- seq(from = alias, to = alias*dim(exp.des)[1] , by = alias)
@@ -236,12 +226,8 @@ print("end agg1")
 		
 	}
 	
-#	print(i)
-#	print(exp.des)
 		hz.write.table(temp.pt,temp.i.aov = temp.i.aov,name = uni.acc[i],acc = .acc,exp.des = exp.des)
-		#stop()
 	}
-#	print(i)
 	}else{
 	list.ttest[[i]] <- paste(uni.acc[i],": Not above significance threshold in Anova. Pairwise ttest was not applied.")
 	}

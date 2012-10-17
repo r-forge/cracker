@@ -1,8 +1,6 @@
 hz.script.row.plot <-
-function(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui){
-	
-save(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,file = "hz.row.plot.Rdata")	
-	
+function(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,inf.info = NULL){
+
 if(is.vector(.data2$x.sd)){
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
@@ -23,7 +21,18 @@ ratio.prog <- prog.max/8
 row.plot.data 	<- .data2$x[order(as.character(rownames(.data2$x))),]
 show.sd.data	<- .data2$x.sd[order(as.character(rownames(.data2$x.sd))),]
 prot.n			<- .data2$prot.n[order(as.character(rownames(.data2$prot.n))),]
+if(length(prot.n) == 0){
+	prot.n <- matrix(0,ncol = dim(.data2$x)[2],nrow = dim(.data2$x)[1])
+	
+}
 
+
+
+
+if(length(show.sd.data) == 0){
+	show.sd.data <- matrix(0,ncol = dim(.data2$x)[2],nrow = dim(.data2$x)[1])
+	
+}
 
 rows.n			<- rownames(prot.n)
 rows.sd			<- rownames(show.sd.data)
@@ -45,7 +54,6 @@ try(	sub.info 	<- .data2$proteinlist.info[order.info,1:3])
 
 
 if(!exists("sub.info")){sub.info <- c()}
-
 
 
 
@@ -153,8 +161,8 @@ print("started plotting")
 					x.xlab = gui.input$x.xlab,
 					.design = .design,
 					lineplot.beside = gui.input$lineplot.beside,
-					gui.input = gui.input,prog.max=prog.max,ratio.prog= ratio.prog,pb=pb,hz.exp.des.parse.data2=hz.exp.des.parse.data2,colorblind.set=colorblind.set,.col=.col
-					)
+					gui.input = gui.input,prog.max=prog.max,ratio.prog= ratio.prog,pb=pb,hz.exp.des.parse.data2=hz.exp.des.parse.data2,colorblind.set=colorblind.set,.col=.col,inf.info =inf.info) 
+					
 print("finished plotting")
 return(list())
 }

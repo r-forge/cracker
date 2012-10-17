@@ -12,8 +12,8 @@ cRacker has been programmed to automate standard normalization strategies of qua
 \tabular{ll}{
 Package: \tab cRacker\cr
 Type: \tab Package\cr
-Version: \tab 1.488\cr
-Date: \tab 2012-09-11\cr
+Version: \tab 1.490\cr
+Date: \tab 2012-10-16\cr
 License: \tab  GNU General Public License\cr
 }
 

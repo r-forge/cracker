@@ -23,7 +23,6 @@ function(	path=NA,
 
 	temp.all <- cbind(temp.all$rawfilename, temp.all$sam_id)
 
-print(dim(temp.all))
 temp.all <-unique((temp.all))
 #### 
 # cut paths 

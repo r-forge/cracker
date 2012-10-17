@@ -1,8 +1,9 @@
 hz.script <-
 function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=NULL,.data = NA){
+
 require("tcltk2")
 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
-
+#save(path1,path2.set,import.list,.data,file = "temp.Rdata")
 
 path2 			<-	normalizePath(path2.set$path)
 	ratio.prog <- 10000
@@ -47,24 +48,58 @@ ui$init();				# Init (loads library)
 prog.max <- 10000
 pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
 
+import.list.backup <- import.list
 
 import.list <- import.list[import.list$file.type ==path2.set$engine,]
 
 if(!exists(".data")|!is.data.frame(.data)){
 print("Loading .data")
 
-assign("import.list",list(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb),envir = .GlobalEnv)
+#assign("import.list",list(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb),envir = .GlobalEnv)
 
-if(path2.set$data!= "default"){
-	assign("path2.set.test",path2.set,envir = .GlobalEnv)
-	load(path2.set$data)
-	
-}else{
-	
-	try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
-try(print(dim(.data)))
-
+hz.check.data <- function(x){
+	template <- c(1,2,3,4,11)
+	x <- any(all(is.na(x[,1])),all(is.na(x[,2])),all(is.na(x[,3])),all(is.na(x[,4])),all(is.na(x[,5])))
+	return(x)
 }
+control.data <- TRUE
+while(control.data){
+	if(path2.set$data!= "default"){
+	#assign("path2.set.test",path2.set,envir = .GlobalEnv)
+		load(path2.set$data)
+	}else{	
+		try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
+		try(print(dim(.data)))
+	}
+
+	if(!is.vector(.data)){
+			control.data <- hz.check.data(.data)
+		}else{control.data <- TRUE}
+
+		
+	if(control.data){
+		redefine.value <- hz.redefine.settings(import.list.backup,import.list$file.type)
+
+	if(redefine.value$action == 3){stop()}
+	if(redefine.value$action == 2){control.data <- FALSE}
+	if(redefine.value$action == 1){
+
+			import.list <- import.list.backup[import.list.backup$file.type ==redefine.value$type,]
+		if(path2.set$data== "default"){
+			try(	.data 		<- hz.import(import.list = import.list, path.data = path2.set$path, path2.input.file = path2.input.file,prog.max=prog.max,ui=ui,pb=pb))
+			try(print(dim(.data)))
+		if(!is.vector(.data)){
+			control.data <- hz.check.data(.data)
+		}else{control.data <- TRUE}
+
+		}
+	}
+	}
+}
+
+
+
+
 
 try(print(dim(.data)))
 #assign(".data",.data,envir = .GlobalEnv)
@@ -192,6 +227,10 @@ if(any(unique(exp.design.temp$Include)>1)){
 
 if(exists("exp.design.temp")){
 	exclude.string <- exp.design.temp$Name[exp.design.temp$Include == 0 ]
+	temp.rawfilenames <- unique(.data$rawfilename)
+	exclude.string <- intersect(exclude.string,temp.rawfilenames)
+	
+	
 	if(length(exclude.string)> 0){
 		for(i in 1:length(exclude.string)){
 			print(paste("Excluding samples:",exclude.string[i]))
@@ -544,7 +583,7 @@ if(gui.input$plot.only == ""){
 		if(all(is.na(.data$Modified.Sequence))){
 		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],sep = "..")
 		}else{
-		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$Modified.Sequence,gui.input$phospho.string,sep = "..")
+		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$Modified.Sequence[phospho.grep],gui.input$phospho.string,sep = "..")
 	
 		}
 	}
@@ -609,7 +648,6 @@ dev.off()
 }
 
 try(hz.write.unique.prots.seq(.data))
-save.image("test.Rdata")
 print(dim(.data))
 	.error <- class(try(
 	.data2 	<- hz.matrix.creator(	.data,
@@ -766,9 +804,9 @@ if(error.control == "try-error"){
 
 	if(exists(".design")){
 		
-		save(.data2,.data,temp.order,.design,file = "results-binary.Rdata")								
+		save(.data2,.data,temp.order,import.list,.design,file = "results-binary.Rdata")								
 	}else{
-		save(.data2,.data,temp.order,file = "results-binary.Rdata")								
+		save(.data2,.data,temp.order,import.list,file = "results-binary.Rdata")								
 
 	}
 	print("hui")

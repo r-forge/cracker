@@ -6,7 +6,6 @@ function(x,n = 20){
 		n = 20
 	}
 	
-	print(n)
 	print(nchar(x))
 	if(nchar(x) >n){
 

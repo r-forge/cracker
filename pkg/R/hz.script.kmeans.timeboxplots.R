@@ -1,7 +1,7 @@
 hz.script.kmeans.timeboxplots <-
 function(kmeans.cluster.output,i,k.data,.design,gui.input, y.lab.input,colorblind.set,.col,prog.max,pb,ui,kmeans.list,kmeans.at,kmeans.col){
 	
-	print("box")
+	#print("box")
 temp.i 	<- as.matrix(kmeans.cluster.output[,1][kmeans.cluster.output[,1] == i])
 		temp.merge	<-	merge(as.matrix(temp.i),k.data,by = 0)
 		temp.merge 	<-  temp.merge[,-c(1,2)]
@@ -33,7 +33,7 @@ for(temp.bp in 1:length(unique(.design.used[,2]))){
 	
 	sum.it <- sum(sum.it +length(temp.bp.order)+.gap)
 	
-	print(sum.it)
+	#print(sum.it)
 		at.temp[at.temp > sum.it] <- at.temp[at.temp > sum.it]+.gap
 		
 	
@@ -66,7 +66,7 @@ temp	<- boxplot(			temp.merge ,	type = "n",
 	temp.mean <- apply(temp.merge,2,function(x){x<-as.numeric(x);x<- median(x,na.rm = TRUE)})
 
 		for(.col.temp.i in unique(.col.temp)){
-			print(.col.temp.i)
+			#print(.col.temp.i)
 			.col.temp.temp.i <- .col.temp == .col.temp.i
 			axis(1,at = at.temp[.col.temp.temp.i],labels = colnames(temp.merge)[.col.temp.temp.i],las = 2,col.axis = .col.temp.i)
 		

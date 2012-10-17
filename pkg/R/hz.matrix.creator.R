@@ -567,7 +567,7 @@ if(1==1){
 									yy <- seq(range(y)[1],range(y)[2], length=length(.col.ramp2))
 									dx <- diff(yy)
 									for(ii in 1:length(yy)){
-										print(ii)
+										#print(ii)
 										grid.clip(x=0, y=yy[ii],
 										width= 1, 
 										height=2*dx[ii],
@@ -604,7 +604,7 @@ if(1==1){
 									yy <- seq(range(y)[1],range(y)[2], length=length(.col.ramp2))
 									dx <- diff(yy)
 									for(ii in 1:length(yy)){
-										print(ii)
+										#print(ii)
 										grid.clip(x=0, y=yy[ii],
 										width= 1, 
 										height=2*dx[ii],
@@ -758,7 +758,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 							}
 						}	
 		
-						print(dim(prot.tryp.length))
+						#print(dim(prot.tryp.length))
 						temp.my.pepid <- merge(as.matrix(temp.my.pepid), prot.tryp.length,by = 1,all = TRUE)
 				
 			}			
@@ -778,7 +778,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 				prot.tryp.length1 	<- aggregate(temp.s$MS.MS.Count,list(temp.s$code),length)
 			}
 		}
-		print(dim(prot.tryp.length))
+		#print(dim(prot.tryp.length))
 		temp.my.pepid <- merge(as.matrix(temp.my.pepid), prot.tryp.length,by = 1,all = TRUE)
 				
 	}
@@ -1199,7 +1199,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 									temp.my.z 		<- temp.my.z[mass.accuracy,]
 									temp.my.z		<- as.vector(as.matrix(temp.my.z))
 								}
-								if(is.vector(temp.my.z) == FALSE){print(x)}
+								#if(is.vector(temp.my.z) == FALSE){print(x)}
 								if(length(temp.my.z) != 8){alarm();print(x);temp.my.z <- rep("error in data collection!",8)}
 								
 								return(as.vector(as.matrix(temp.my.z)))
@@ -1428,25 +1428,13 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 				#assign("pep.all.mean.",pep.all.mean.n,envir=.GlobalEnv)
 	
 				pep.all.mean.n <- log2(pep.all.mean.n)
-				print("test")
-				#assign("pep.all.mean.n",pep.all.mean.n,envir=.GlobalEnv)
-
-				#´stop("")
 				pep.all.mean.n[pep.all.mean.n == Inf] 	<- 9999 
-								print("test")
-
 				pep.all.mean.n[pep.all.mean.n == -Inf] 	<- -9999
-				print("test")
-				
 				print(n15.correct.method)
-
-
 				if(n15.correct.method != "none"){
-			
 				print("start 15N")
 				n15.correct.expect <- log2(n15.correct.expect)
-				
-		pdf("log2-correction-label-free.pdf")
+				pdf("log2-correction-label-free.pdf")
 				
 				n15.correct.value <- c()
 				n15.correct.matrix <- c()
@@ -1462,7 +1450,6 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 					if(n15.correct.method == "mean"){ n15.mean <- mean(temp.n15,na.rm = TRUE)}
 					if(n15.mean> 0){temp.correct.value <- n15.mean}else{
 					temp.correct.value <- n15.mean*-1	}
-print(temp.correct.value)
 					temp.n15.correct   <- as.numeric(temp.n15)+	as.numeric(temp.correct.value)
 					n15.correct.value <- c(n15.correct.value,temp.correct.value )
 					print("binding vectors")
@@ -2163,7 +2150,7 @@ sam.mean.phospho <- matrix()
 						aov.data <- rbind(aov.data,temp.s)
 						}
 				}
-print(i)
+#print(i)
 
 				data.mean 	<- cbind(data.mean,test[test.order,3])
 				data.sd 	<- cbind(data.sd,test[test.order,4])
@@ -2305,7 +2292,7 @@ print(i)
 									temp.my.z 		<- temp.my.z[mass.accuracy,]
 									temp.my.z		<- as.vector(as.matrix(temp.my.z))
 								}
-								if(is.vector(temp.my.z) == FALSE){print(x)}
+								#if(is.vector(temp.my.z) == FALSE){print(x)}
 								if(length(temp.my.z) != 8){alarm();print(x);temp.my.z <- rep("error in data collection!",8)}
 								
 								return(as.vector(as.matrix(temp.my.z)))

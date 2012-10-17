@@ -1,6 +1,5 @@
 hz.script.heatmap2 <-
 function(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog){
-	#save(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog.max,pb,ui, plot.type,color.blind,ratio.prog,file = "test.heatmap.Rdata")
 		if(!exists("ratio.prog")){ratio.prog <- 1000}
 
 	######## heatmap:
@@ -53,7 +52,7 @@ function(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog
 nchar.rownames 		<- nchar(test.nchar.rownames)
 test.nchar.rownames[nchar.rownames > 15] <- substring(test.nchar.rownames,1,15)
 test.nchar.rownames[nchar.rownames > 15] <- paste(test.nchar.rownames[nchar.rownames > 15] ,"...",sep = "")
-rownames(hm.input.NA) <- test.nchar.rownames
+#rownames(hm.input.NA) <- test.nchar.rownames
 	
 	gclus.sd <- apply(hm.input.NA,1, function(x){sd(x,na.rm = T)})
 	if(any(as.numeric(gclus.sd) == 0)){
@@ -67,7 +66,7 @@ rownames(hm.input.NA) <- test.nchar.rownames
 	}
 
 	error.try <- class(.error<- try(hz.script.hiercl.return <- hz.script.hiercl(sclus,gclus, p.aov,.col, plot.type= plot.type,gui.input = gui.input)))
-	print(hz.script.hiercl.return)
+	#print(hz.script.hiercl.return)
 
 	if(error.try == "try-error"){
 				print(.error)
@@ -156,8 +155,9 @@ if(error.try.heat == "try-error"){
 							tracecol = "darkgrey",
 							trace= "none",
 							margins = c(heatmap.max,5),
-							lwd =1 
-							#,scale = "row"
+							lwd =1 ,
+							#,scale = "row",
+							labRow = test.nchar.rownames
 							)
 		
 	)

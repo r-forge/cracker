@@ -21,7 +21,6 @@ function(x,sclus,temp.col,temp.lwd,col.temp){
 		}
 
 
-print(it)											
 
 		}
 		return(x)

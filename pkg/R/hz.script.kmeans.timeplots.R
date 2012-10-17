@@ -2,7 +2,7 @@ hz.script.kmeans.timeplots <-
 function(kmeans.cluster.output,i,k.data,.design,gui.input, y.lab.input,main.temp,colorblind.set,.col,prog.max,pb,ui){
 	if(!exists("kmeans.mean")){	kmeans.mean <- c()}
 if(gui.input$time.grouped){
-		print("time")
+		#print("time")
 
 temp.i 	<- as.matrix(kmeans.cluster.output[,1][kmeans.cluster.output[,1] == i])
 		temp.merge	<-	merge(as.matrix(temp.i),k.data,by = 0)
@@ -74,7 +74,7 @@ temp.mean.collect.x <- c()
 temp.mean.collect.y <- c()
 
 for(groups.plot in 1:length(unique(.design.used[,2]))){
-	print(groups.plot)
+	#print(groups.plot)
 		groups.plot.x <- list.groups.x[[groups.plot]]
 	
 	groups.plot.y <- list.groups.y[[groups.plot]]
@@ -147,7 +147,7 @@ if(gui.input$color.plots){
 
 matlines(t(temp.mean.collect.x),t(temp.mean.collect.y),lwd = 8,col = .col.mean.temp.bg,lty = 1)
 matlines(t(temp.mean.collect.x),t(temp.mean.collect.y),lwd = 5,col = .col.mean.temp,lty = 1)
-print(.col.mean.temp)
+#print(.col.mean.temp)
 if(gui.input$barpl){
 
 
@@ -162,7 +162,7 @@ if(gui.input$barpl){
 			}else{
 				padj.test.i <- (test.i+0.2* test.i)
 			}
-			print(.names.test.i)
+			#print(.names.test.i)
 			
 			axis(1,at = c(1:length(.names.test.i)),labels = .names.test.i,las = 2, col.axis = .col.mean.temp[test.i], padj = padj.test.i)
 		}
