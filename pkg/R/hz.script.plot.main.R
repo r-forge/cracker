@@ -1,7 +1,14 @@
 hz.script.plot.main <-
 function(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind){
-	save(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind,file = "script.plot.main.Rdata")
+try(	save(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,y.lab.input,prog.max, ratio.prog,pb,ui, plot.loop,path.data, foldername, colorblind.set,color.blind,file = paste(path.data,foldername,"Rdata/script.plot.main.Rdata",sep = "/"))
+)	
 	
+	if(!exists(".design")){
+try.error <- class(try(	.design  <- read.table(gui.input$exp.design,header = TRUE,sep = "\t")
+))
+
+
+	}
 	
 	.report <- list()
 
@@ -104,7 +111,6 @@ if(dim(.data2$x)[1] > 1){
 		pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
 	}
 	error.try <- class(.error <- try(hz.script.row.plot.space <- hz.script.row.plot(.data2,gui.input,y.lab.input, hz.cracker.anova.return$.aov.new,hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui)))
-
 print("Finished hz.script.row.plot")
 	if(error.try == "try-error"){
 		print(.error)
@@ -229,7 +235,7 @@ print("Finished hz.script.heatmap2")
 
 
 	
-	if(gui.input$go.library != "none"){
+	if(gui.input$go.library != "cRackerMapping-none"){
 	########## GUI 
 	pb.check <- class(try(ui$setProgressBar(pb, ratio.prog*6, label=paste( "Started Mapping..."))))
 
@@ -238,11 +244,11 @@ print("Finished hz.script.heatmap2")
 				pb <- ui$progressBar(title = "cRacker", min = 0,max = prog.max, width = 300)
 				pb.check <- class(try(ui$setProgressBar(pb, ratio.prog*6, label=paste( "Started Mapping..."))))
 		}
-	##############
-		
+	
 	if(exists("hz.script.go.terms.return")){backup.go.input.agg <- hz.script.go.terms.return$backup.go.input.agg}else{backup.go.input.agg <- list()}
 
 	error.try <- class(.error <- try(hz.script.go.terms.return <- hz.script.go.terms(.data2, hz.script.kmeans.return$kmeans.cluster.output, .data2$proteinlist.info,gui.input, hz.script.kmeans.return$kmeans.col, hz.script.kmeans.return$kmeans.at, hz.script.kmeans.return$kmeans.list,prog.max,pb,ui,plot.type,.col,colorblind.set,color.blind, backup.go.input.agg)))
+	
 	
 	print("Finished hz.script.go.terms")	
 						
@@ -254,8 +260,10 @@ print("Finished hz.script.heatmap2")
 	try(		extended.info <- hz.script.go.terms.return$extended.info)
 	}
 
+	
 
 	}
+	
 	
 	if(plot.type == 1&gui.input$volcano){
 		

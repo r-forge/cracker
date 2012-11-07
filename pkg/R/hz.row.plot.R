@@ -42,6 +42,9 @@ function(
 		
 	}
 	
+						plot.col.start		 <-.col # plot.col
+
+	
 	if(!exists("prog.max")){prog.max <- 10000}
 sd.po <- 0
 	.aov.cor <- p.adjust(.aov,gui.input$p.adjust.method)
@@ -117,6 +120,7 @@ if(graphic.type == "pdf"){
 	for(i in 1:dim(tempmean)[1]
 	) {
 
+if(!is.null(ui)){
 ##############	GUI
 	ratio.prog2 <- (prog.max/8)/total
 
@@ -130,6 +134,7 @@ while(pb.check == "try-error1"){
 		pb.check	<- class(try(ui$setProgressBar(pb, i*ratio.prog2, label=paste(round(i/dim(tempmean)[1]*100),  "% done"))))
 }
 ##############	
+}
 		
 		if(graphic.type == "eps"){
 		
@@ -247,9 +252,9 @@ while(pb.check == "try-error1"){
 				col.legend <- c()
 				temp.x.all <- c()
 					.design.plot.backup	<- .design.plot
+					plot.col 			<-	plot.col.start
 					plot.col.backup		<- plot.col
-	
-	
+
 				.names <- c()
 				for(set.time.groups in unique(.design.plot$Group)){
 
@@ -258,11 +263,13 @@ while(pb.check == "try-error1"){
 					}else{
 						.design.plot		<- .design.plot.backup
 					}
+
 					.design.plot.order <- hz.merge.control(.design.plot[,1],gsub(" ","",col.x))		
-					
 					.design.plot 		<- .design.plot[.design.plot.order[!is.na(.design.plot.order)],]
+
+.design.plot.order <- hz.merge.control(gsub(" ","",colnames(x)),.design.plot[,1])
 					plot.col			<- plot.col.backup[.design.plot.order[!is.na(.design.plot.order)]]
-					
+					#print(plot.col)
 
 					 if(!exists("sd.po")){
 					 	sd.po <- rep(0, length(temp.y))
@@ -283,11 +290,13 @@ while(pb.check == "try-error1"){
 					 	.design.plot$Time[.design.plot$Group == set.time.groups]					 	)
 					 
 					 colnames(temp.time.x) <- c("group","intensity","sd","n","name")
+
 					temp.x.m[[set.time.groups]] <- temp.time.x
 				
 					
 					
 					col.vec[[set.time.groups]]	<- plot.col[.design.plot$Group == set.time.groups]	
+					
 					col.legend <- c(col.legend,plot.col[.design.plot$Group == set.time.groups][1])	
 					
 				}
@@ -321,12 +330,30 @@ for(plot.matrix in hz.merge.control(names(temp.x.m),as.character(unique(.design.
 
 					}
 					plot.data <- apply(plot.data,2,as.numeric)
-					#plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) 
+					#plot.data[,2] <- plot.data[,2]-min(plot.data[,2],na.rm = TRUE) 				
+					plot.data[is.na(plot.data[,3]),3] <- 0
 					plot.data.all <- c((as.numeric(plot.data[,2])-plot.data[,3]),(as.numeric(plot.data[,2])+as.numeric(plot.data[,3]))*1.05)
 					}
 					
 										assign("plot.data.all",plot.data.all,envir = .GlobalEnv)
+					
+					if(lineplot.beside){
+					#	ylim.range <- range(plot.data.all[!is.infinite(plot.data.all)],na.rm = T)
+						ylim.range <- range(c(temp.y -sd.po,temp.y+sd.po),na.rm = T)
 
+					}else{
+						#ylim.range <- range(as.numeric(c(x[i,]+show.sd[i,],(x[i,]-show.sd[i,])*0.9)),na.rm = T)
+						ylim.range <- range(c(temp.y -sd.po,temp.y+sd.po),na.rm = T)
+
+						
+						
+					}
+					if(any(is.na(ylim.range[1]),is.infinite(ylim.range[1]))){
+						ylim.range[1] <- 0
+					}
+					if(any(is.na(ylim.range[2]),is.infinite(ylim.range[2]))){
+						ylim.range[2] <- 1
+					}
 					
 			if(lineplot.beside){
 				layout(matrix(c(rep(1,length(unique(.design$Group))+1),2:(length(unique(.design$Group))+2)),2,length(unique(.design$Group))+1, byrow =T), heights = c(0.2,1),widths = c(0.4,rep(1,length(unique(.design$Group)))))
@@ -336,6 +363,10 @@ main.temp <- ""
 				legend("topleft",legend = c(row.x[i],sub.x),box.col = "transparent",cex = 1.5, xjust = 1)
 				
 								par(mai = c(0.1,0.7,0.1,0))
+								
+						
+			
+								
 plot(
 					0,
 					0,
@@ -345,7 +376,7 @@ plot(
 					xlab = "",
 					ylab = x.ylab,
 					#names.arg = col.x,
-					ylim = range(plot.data.all,na.rm = T),
+					ylim = ylim.range,
 					xlim = 	range(.design.plot$Time,na.rm = T) ,
 					frame = FALSE,
 					axes = F,
@@ -368,7 +399,7 @@ plot(
 					xlab = x.xlab,
 					ylab = x.ylab,
 					#names.arg = col.x,
-					ylim = range(plot.data.all,na.rm = T),
+					ylim = ylim.range,
 					xlim = 	range(.design.plot$Time,na.rm = T) ,
 					frame = FALSE,
 					lwd = 3,
@@ -396,7 +427,7 @@ plot(
 					xlab = x.xlab,
 					ylab = x.ylab,
 					#names.arg = col.x,
-					ylim = range(plot.data.all,na.rm = T)*c(1,1.2),
+					ylim = ylim.range,
 					xlim = 	range(.design.plot$Time,na.rm = T) ,
 					frame = FALSE,
 					lwd = 3,
@@ -429,8 +460,7 @@ plot(
 					)
 					if(lineplot.beside){
 			
-					plotCI(plot.data[,1],as.numeric(plot.data[,2]),ui =as.numeric(plot.data[,2])+as.numeric(plot.data[,3]),li =as.numeric(plot.data[,2])-as.numeric(plot.data[,3])
-						,type = "p",add = TRUE,col =col.vec[[plot.matrix]], gap = 0,lwd = 3)
+					plotCI(plot.data[,1],as.numeric(plot.data[,2]),ui =as.numeric(plot.data[,2])+as.numeric(plot.data[,3]),li =as.numeric(plot.data[,2])-as.numeric(plot.data[,3])	,type = "p",add = TRUE,col =col.vec[[plot.matrix]], gap = 0,lwd = 3)
 			
 			
 			legend(	"top", 
@@ -627,6 +657,11 @@ library(gplots)
 			}
 			
 			  par(lwd = 2)
+yaxp.v <- c(0,max(as.numeric(tempmean[!is.infinite(tempmean)]),na.rm = TRUE), 4) 
+yaxp.v[is.na(yaxp.v)] <- 1
+yaxp.v[is.infinite(yaxp.v)] <- 1
+print(yaxp.v)
+
 
 				test <- barplot2(
 				temp.y-temp.min,
@@ -643,7 +678,7 @@ library(gplots)
 				lwd = 2,
 				beside = TRUE,
 				xpd=F, 
-				yaxp=c(0,max(as.numeric(tempmean[!is.infinite(tempmean)]),na.rm = TRUE), 4) 
+				yaxp=yaxp.v 
 				,
 				ylim = c(temp.min,max(as.numeric(sd.po)+as.numeric(temp.y[!is.infinite(temp.y)]),na.rm = TRUE)), 
 				offset = temp.min,
@@ -672,18 +707,19 @@ library(gplots)
 			
 		}
 		
-		if(is.matrix(inf.info)){
-			l.pos <- rep(3,length(temp.x))
-			l.pos[is.infinite(as.numeric(inf.info[i,])) & as.numeric(inf.info[i,] ) < 0 ] <- 1
-			if(barpl&time.groups){n.input <- as.vector(t(time.groups.n))}else{n.input <- inf.info[i,]}
-			if(exists("temp.min")){	
-						
-				text(temp.x,y = temp.min,labels=n.input,col = "black",pos = l.pos,cex = 1)
-				#text(temp.x,y = temp.min,labels=n.input,col = "red",pos = l.pos,cex = 1,lwd = 2)
-}else{
+		
+		if(exists("inf.info")){
+			if(is.matrix(inf.info)){
+				l.pos <- rep(3,length(temp.x))
+				l.pos[is.infinite(as.numeric(inf.info[i,])) & as.numeric(inf.info[i,] ) < 0 ] <- 1
+				if(barpl&time.groups){n.input <- as.vector(t(time.groups.n))}else{n.input <- inf.info[i,]}
+				if(exists("temp.min")){		
+					text(temp.x,y = temp.min,labels=n.input,col = "black",pos = l.pos,cex = 1)
+				}else{
 	
-}
+				}
 			
+			}
 		}
 		
 		if(length(show.sd) != 0& barpl == FALSE){
@@ -740,6 +776,4 @@ library(gplots)
 
 	graphics.off()
 	print(paste("Printed row.plot in ",getwd()))
-
-
 }

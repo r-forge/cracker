@@ -3,7 +3,7 @@ function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=N
 
 require("tcltk2")
 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
-#save(path1,path2.set,import.list,.data,file = "temp.Rdata")
+save(path1,path2.set,import.list,.data,file = "hz.script.Rdata")
 
 path2 			<-	normalizePath(path2.set$path)
 	ratio.prog <- 10000
@@ -102,6 +102,8 @@ while(control.data){
 
 
 try(print(dim(.data)))
+
+
 #assign(".data",.data,envir = .GlobalEnv)
 
 #assign("import.list", import.list, envir=globalenv())
@@ -210,7 +212,7 @@ path2 <- dirname(path2)
 ## exclude samples
 #####
 if(gui.input$exp.design!=""){
-try(exp.design.temp <- read.table(gui.input$exp.design, stringsAsFactors = FALSE,header = T))
+try(exp.design.temp <- read.table(gui.input$exp.design, stringsAsFactors = FALSE,header = T,sep = "\t"))
 
 
 if(any(unique(exp.design.temp$Include)>1)){
@@ -224,24 +226,28 @@ if(any(unique(exp.design.temp$Include)>1)){
 
 }
 }
-
 if(exists("exp.design.temp")){
-	exclude.string <- exp.design.temp$Name[exp.design.temp$Include == 0 ]
-	temp.rawfilenames <- unique(.data$rawfilename)
-	exclude.string <- intersect(exclude.string,temp.rawfilenames)
-	
-	
-	if(length(exclude.string)> 0){
-		for(i in 1:length(exclude.string)){
-			print(paste("Excluding samples:",exclude.string[i]))
-			print(dim(.data))
 
-			.data <- .data[!make.names(.data$rawfilename,allow = F) == exclude.string[i],]
+	exclude.string <- exp.design.temp$Name[exp.design.temp$Include == 0 ]
+
+	if(length(exclude.string) >0){
+	print("Starting excluding samples")
+
+	all.rawfilenames <- make.names(.data$rawfilename,allow = F)
+	temp.rawfilenames <- unique(all.rawfilenames)
+	exclude.string 	<- intersect(exclude.string,temp.rawfilenames)
+	print("excluding samples")
+	print(dim(.data))
+	if(length(exclude.string) >0){
+			temp 			<- hz.merge.control(all.rawfilenames,exclude.string)
+			temp2 <- temp[!is.na(temp)]
+			.data <- .data[-temp2,]
 		}
 	}
-	
-}
+	print("Finished excluding samples")
 
+
+}
 
 gui.input$shape				= (100-gui.input$shape)/100
 gui.input$shape.prot.norm	= gui.input$shape.prot.norm/100#
@@ -405,6 +411,10 @@ print(foldername)
 dir.create(.setpath <- paste(path2,foldername,sep = "/")) 
 print(.setpath)
 setwd(.setpath)
+dir.create("Rdata")
+rdata.path <- paste(.setpath,"Rdata",sep = "/") 
+
+save(.data,file = paste(rdata.path,"import-binary.Rdata",sep = "/"))
 
 wd.write 	<- getwd()
 #######
@@ -418,7 +428,7 @@ print(gui.input)
 sink(type = "message")
 sink()
 settings <- gui.input$settings
-save(settings,gui.input,file = "parameters.Rdata")
+save(settings,gui.input,file = paste(rdata.path,"parameters.Rdata",sep = "/"))
 }
 parameters.write()
 ## back to the console
@@ -505,7 +515,6 @@ if(gui.input$plot.only == ""){
 	}
 	##############
 
-	save(.data,file = "import-binary.Rdata")
 	pb.check	<- class(try(ui$setProgressBar(pb, prog.max, label=.label)))
 
 	
@@ -649,6 +658,7 @@ dev.off()
 
 try(hz.write.unique.prots.seq(.data))
 print(dim(.data))
+print("starting hz.matrix.creator")
 	.error <- class(try(
 	.data2 	<- hz.matrix.creator(	.data,
 									Raw 			= gui.input$raw,
@@ -804,9 +814,9 @@ if(error.control == "try-error"){
 
 	if(exists(".design")){
 		
-		save(.data2,.data,temp.order,import.list,.design,file = "results-binary.Rdata")								
+		save(.data2,.data,temp.order,import.list,.design,file = paste(rdata.path,"results-binary.Rdata",sep = "/"))								
 	}else{
-		save(.data2,.data,temp.order,import.list,file = "results-binary.Rdata")								
+		save(.data2,.data,temp.order,import.list,file = paste(rdata.path,"results-binary.Rdata",sep = "/"))								
 
 	}
 	print("hui")
@@ -862,25 +872,36 @@ if(gui.input$calc.empai){
 #.data2 <- backup
 # color code
 
-if(gui.input$plot.only != "" & exists(".design")){
 	
-	if(gui.input$exp.design != ""){
-	
-	.design  <- read.table(gui.input$exp.design,header = TRUE,sep = "\t")
+if(gui.input$exp.design != ""){
+
+try.error <- class(try(	.design  <- read.table(gui.input$exp.design,header = TRUE,sep = "\t")
+))
+
+	if(try.error != "try-error"){
 	.design  <- .design[.design$Include == 1,]
 
 	.design[,2] <- tolower(make.names(.design[,2],allow = F))
 	.design[,1] <- tolower(make.names(.design[,1],allow = F))
+	exp.design <- .design
+	}else{	
+	exp.design <- .data2$exp.des
+	}	
+
+}else{
+	exp.design <- .data2$exp.des	
+
 }	
 
-exp.design <- .design	
-}else{
-exp.design <- .data2$exp.des	
-}
-set.seed(2)
 
-save(exp.design,gui.input,colorblind.set,color.blind,.data2, file = "exp.design.Rdata")
+
+
+set.seed(2)
+print(exp.design)
 error.try <- class(.error	<- try(results.script.exp.design<- hz.script.exp.design(exp.design = exp.design,gui.input = gui.input, colorblind.set = colorblind.set, color.blind = color.blind,.data2)))
+
+save(exp.design, results.script.exp.design,exp.design,gui.input,colorblind.set,color.blind,.data2, file = paste(rdata.path,"exp.design.Rdata",sep = "/"))
+
 try(.col 						<- results.script.exp.design$.col)
 try(hz.exp.des.parse.data2  	<- results.script.exp.design$hz.exp.des.parse.data2)
 
@@ -924,6 +945,7 @@ if(!gui.input$color.plots & gui.input$barpl){
 
 	
 }
+
 assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
 error.try <- class(.error<- try(hz.script.plot.main.return <-  hz.script.plot.main(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername=foldername, colorblind.set= colorblind.set, color.blind = color.blind)))
 
@@ -960,10 +982,10 @@ if(error.try == "try-error"){
 }	
 	
 	if(exists(".design")){
-try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,.design,hz.script.plot.main.return,file = paste(path2, foldername,"results-binary.Rdata",sep = "/"))								
+try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,.design,hz.script.plot.main.return,file = paste(rdata.path,"results-binary.Rdata",sep = "/"))								
 )	
 }else{
-try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,file = paste(path2, foldername,hz.script.plot.main.return,"results-binary.Rdata",sep = "/")								
+try(		save(.data2,.data,temp.order, hz.exp.des.parse.data2,file = paste(rdata.path,"results-binary.Rdata",sep = "/")								
 ))
 	}
 
@@ -988,3 +1010,4 @@ print("done")
 return(list(.data2 =.data2,path2 = path2,.data=.data,gui.input = gui.input,statistics = hz.script.plot.main.return$hz.cracker.anova.return))
 
 }
+

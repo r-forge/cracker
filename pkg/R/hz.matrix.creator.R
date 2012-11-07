@@ -168,7 +168,10 @@ if(path.design != ""){
 		exp.set.2[,2] <- make.names(tolower(exp.set.2[,2]),allow = FALSE)
 		exp.set.2[,1] <- make.names(tolower(exp.set.2[,1]),allow = FALSE)
 		exp.set.2[,5] <- make.names(tolower(exp.set.2[,5]),allow = FALSE)
-		
+		x$rawfilename <- make.names(tolower(x$rawfilename),allow = FALSE)
+		x$sam_id <- make.names(tolower(x$sam_id),allow = FALSE)
+
+		print(exp.set.2[1,1] == exp.set.2[1,2])
 		if(any(!(exp.set.2[,1] == exp.set.2[,5]))){
 			print("replacing raw file name")
 			
@@ -186,8 +189,8 @@ if(path.design != ""){
 
 		}
 		
-		
-		
+		print(exp.set.2[1,1] == exp.set.2[1,2])
+
 		if(dim(exp.set.2)[2] == 1){
 			exp.set.2 <- read.table(path.design,sep = "\t",stringsAsFactors = FALSE)
 		}
@@ -220,14 +223,16 @@ if(path.design != ""){
 		}
 		exp.set.2 <- apply(exp.set.2,2,as.character)
 	
-
+#stop()
 	##### change result file
 	x$rawfilename <- cut.path(as.character(x$rawfilename))
-	.result 	<- as.character(x$rawfilename)
+	.result 		<- as.character(x$rawfilename)
+	#.result 	<- make.names(tolower(.result),allow = F)
 	
 	
 	for( .r in 1:dim(exp.set.2)[1]){
-		.result[tolower(.result) == exp.set.2[.r,1]]  <- exp.set.2[.r,2]
+		
+		.result[tolower(.result) == tolower(exp.set.2[.r,1])]  <- exp.set.2[.r,2]
 		
 		
 	}

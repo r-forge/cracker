@@ -1,7 +1,7 @@
 hz.script.exp.design <-
 function(exp.design ,gui.input, colorblind.set, color.blind,.data2){
 hz.exp.des.parse.data2 <- hz.exp.des.parse(x = colnames(.data2$x) ,exp.des = exp.design,raw.type = .data2$gui.input$raw,gui.input = gui.input)	
-
+if(dim(exp.design)[1] > 2){.design <- exp.design}
 .col 			<- as.numeric(hz.exp.des.parse.data2[,3])
 	if(length(unique(.col))> 1){
 		if(colorblind.set){
@@ -98,6 +98,7 @@ gui.input$exp.design != "")){
 			
 			.design.uni <- unique(.design[,c(temp.design.raw,3)])
 			.design.pch <- c()
+			
 			for(temp.it in 1:length(hz.exp.des.parse.data2[,2])){
 				temp.i <- tolower(hz.exp.des.parse.data2[temp.it,2])
 				temp.i <- gsub(" $","", temp.i)
@@ -111,24 +112,28 @@ gui.input$exp.design != "")){
 				}
 				.design.pch <-c(.design.pch, temp.i[,2])
 		
-			}		
-		
+			}
+			for(temp.t in 1:length(unique(.design.pch))){
+				.design.pch[.design.pch==unique(.design.pch)[temp.t]] <- temp.t
+				
+			}			
 			if(length(.design.pch != 0)){
 				if(colorblind.set){
-					.design.col <- colorRampPalette(unlist(color.blind)[-1])(max(.design.pch))[.design.pch]
+					.design.col <- colorRampPalette(unlist(color.blind)[-1])(max(.design.pch))[as.numeric(.design.pch)]
 				}else{
-					.design.col <- sample(rainbow(max(.design.pch)))[.design.pch]
+					.design.col <- sample(rainbow(max(.design.pch)))[as.numeric(.design.pch)]
 				}
 			}else{
 				.design.pch <- 1
 				.design.col <- rgb(0,133,178,max = 255)
 			}
 			
+
+			
 			try(hz.exp.des.parse.data2[,1] <- .design.col)	
 			try(hz.exp.des.parse.data2[,3] <- .design.pch)
 			try(hz.exp.des.parse.data2 <-cbind(hz.exp.des.parse.data2,order.vec))
 			
-		
 	}
 	
 }

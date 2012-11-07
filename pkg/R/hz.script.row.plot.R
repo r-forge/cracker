@@ -1,6 +1,8 @@
 hz.script.row.plot <-
-function(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,inf.info = NULL){
+function(.data2,gui.input,y.lab.input,.aov.new = NULL, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,inf.info = NULL){
 
+#	ui <- NULL
+#.aov.new <- hz.cracker.anova.return$.aov.new
 if(is.vector(.data2$x.sd)){
 	
 	if(!exists("ratio.prog")){ratio.prog <- 1000}
@@ -143,7 +145,8 @@ gui.input$lineplot.beside  <- FALSE
 .col <- hz.exp.des.parse.data2[,1]
 print("started plotting")
 #stop()
-	hz.row.plot(	x = row.plot.data,
+if(!exists("inf.info")){inf.info <- NULL}
+try(	hz.row.plot(	x = row.plot.data,
 					show.sd = show.sd.data,
 					sd.rel = TRUE,
 					
@@ -156,13 +159,14 @@ print("started plotting")
 					graphic.type = gui.input$graphic.type,
 					plot.type = "b",
 					barpl = gui.input$barpl,
-					time.groups = gui.input$time.grouped,
+					time.groups = T,#gui.input$time.grouped,
 					group.barplot = F,
 					x.xlab = gui.input$x.xlab,
 					.design = .design,
 					lineplot.beside = gui.input$lineplot.beside,
 					gui.input = gui.input,prog.max=prog.max,ratio.prog= ratio.prog,pb=pb,hz.exp.des.parse.data2=hz.exp.des.parse.data2,colorblind.set=colorblind.set,.col=.col,inf.info =inf.info) 
-					
+)					
 print("finished plotting")
+graphics.off()
 return(list())
 }
