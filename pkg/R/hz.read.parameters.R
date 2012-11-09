@@ -425,12 +425,17 @@ tkgrid(tk2label(tb2,text="use list info for exclusion" ),cbmq,sticky = "we")
 # PHospho
 ####
 	
-	tb4.4 				<- tk2checkbutton(tb3)
-	tb3.var.phospho 	<- tclVar(settings$tb3.var.phospho)
-tkconfigure(tb4.4,variable=tb3.var.phospho)
-tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),tb4.4,help.button(tb3,hz.function.file(function.file,"PP")[2] ,hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
+#	tb4.4 				<- tk2checkbutton(tb3)#
+#	tb3.var.phospho 	<- tclVar(settings$tb3.var.phospho)
+#tkconfigure(tb4.4,variable=tb3.var.phospho)
+#tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),tb4.4,help.button(tb3,hz.function.file(function.file,"PP")[2] ,hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
 
+	tb3.phospho 					<- c("none","peptide based analysis","protein based analysis")
+	tb3.var.phospho 				<- tclVar()  
+	tclvalue(tb3.var.phospho) 		<- settings$tb3.phospho
+	comboBox 							<- ttkcombobox(tb3,values=tb3.phospho,textvariable = tb3.var.phospho,width = 17,state = "readonly")
 
+tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),comboBox,help.button(tb3,hz.function.file(function.file,"PP")[2] , hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
 ######
 # outlier
 ######      	
@@ -1075,17 +1080,17 @@ tkgrid(tklabel(tt2,text = hz.function.file(function.file,"SAVE")[2],font = fontH
 	Cancel.but 	<- tk2button(tt2,text="Stop",command=function() {tclvalue(done)<-1;tkdestroy(tt3)})
 	OK.but 		<- tk2button(tt2,text="Start",command=function() {tclvalue(done)<-2;tkdestroy(tt3)})
 	
-	tkbind(tt2, "<Return>",function(x){tclvalue(done)<-2 ; tkdestroy(tt3)})
-	tkbind(tt2, "<Escape>",function(x){tclvalue(done)<-1 ; tkdestroy(tt3)})
 
 	
   
    		
 
 tkgrid(OK.but,Cancel.but,columnspan = 1,pady=5)	
-
 tkdestroy(tk.loading)
 tkgrid(tt2)
+	tkbind(tt2, "<Return>",function(x){print("Return");tclvalue(done)<-2 ; tkdestroy(tt3)})
+	tkbind(tt2, "<Escape>",function(x){print("Return");tclvalue(done)<-1 ; tkdestroy(tt3)})
+
 
 tkwait.window(tt2)
 
@@ -1166,10 +1171,10 @@ binary.rewrite <- function(x){
 	tb2.var.rownorm <-  as.character(tb2.var.rownorm)
 
 
-	settings$tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))	
-	tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))
-	if (tb3.var.phospho =="1"){tb3.var.phospho <- TRUE}else{tb3.var.phospho <- FALSE}
-    tb3.var.phospho <- as.character(tb3.var.phospho)
+	#settings$tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))	
+	#tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))
+	#if (tb3.var.phospho =="1"){tb3.var.phospho <- TRUE}else{tb3.var.phospho <- FALSE}
+    #tb3.var.phospho <- as.character(tb3.var.phospho)
     
    
     settings$tb2.val.score 		<- as.numeric(tclvalue(tb2.val.score))
@@ -1187,6 +1192,42 @@ binary.rewrite <- function(x){
 #######
 # tab3	 
 #######	
+try(	 tb3.var.phospho <-  tclvalue(tb3.var.phospho))
+try(settings$tb3.phospho <- 	 tb3.var.phospho)
+
+
+	tb3.var.phospho.protein <- FALSE
+	tb3.var.phospho <- FALSE
+	if((tb3.var.phospho) == tb3.phospho[1]){
+		tb3.var.phospho 		<- FALSE
+		tb3.var.phospho.protein <- FALSE
+	}else{
+		
+	
+	if((tb3.var.phospho) == tb3.phospho[2]){
+		tb3.var.phospho 		<- TRUE
+		tb3.var.phospho.protein <- FALSE
+	}else{
+	if((tb3.var.phospho) == tb3.phospho[3]){
+		tb3.var.phospho 		<- TRUE
+		tb3.var.phospho.protein <- TRUE
+	}else{
+		tb3.var.phospho 		<- FALSE
+		tb3.var.phospho.protein <- FALSE
+		
+	}		
+	}
+
+	
+		
+	}
+
+	
+	
+	
+	
+	
+	
 	settings$tb3.outlier <- as.character(tclvalue(tb3.var.outlier))
 	tb3.var.outlier <- as.character(tclvalue(tb3.var.outlier))
 	if(tb3.var.outlier  == tb3.outlier[1] ){tb3.var.outlier ="NA"}
@@ -1422,6 +1463,7 @@ if(tclvalue(done) == 2){     return(ReadAffy(
 
      				outlier 		= tb3.var.outlier,
      				phospho 		= tb3.var.phospho,
+     				phospho.protein = tb3.var.phospho.protein,
      				zero.treat		= tb3.val.zero.treat,
      				build.matrix	= TRUE,#tb3.var.build.matrix,
 					#plot.only		= binary.rewrite(tb3.var.plot.only),
@@ -1476,4 +1518,4 @@ if(tclvalue(done) == 2){     return(ReadAffy(
      				     				}
      				
      				 }
-#print(hz.read.parameters(path1 =("/Users/henno/cracker/pkg/data/"),path2 = "",path2.set = list(settings = "",2,3),.data = ""))
+#print(gui.input<- hz.read.parameters(path1 =("/Users/henno/cracker/pkg/data/"),path2 = "",path2.set = list(settings = "",2,3),.data = ""))

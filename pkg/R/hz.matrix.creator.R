@@ -1317,7 +1317,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 				
 				target.sd		<- apply(test,2,function(x){sd(x,na.rm = TRUE)})
 				write.csv(target.sd,file = "CBN-sd.csv")
-				target.sd.rel	<- apply(test,2,function(x){sd(x,na.rm = TRUE)/mean(x,na.rm = TRUE)})
+				target.sd.rel	<- apply(test,2,function(x){sd(x,na.rm = TRUE)/abs(mean(x,na.rm = TRUE))})
 				target.n		<- apply(test,2,function(x){length(x)})
 			
 				cbn.prot.data 				<- rbind(target.mean,target.sd,target.n, target.sd.rel,norm.type)
@@ -2058,6 +2058,9 @@ sam.mean.phospho <- matrix()
 # all.n..col kontrollieren
 
 			if(phospho & dim(sam.mean.phospho)[1] > 0){
+				assign("sam.mean",sam.mean,envir = .GlobalEnv)
+				assign("sam.mean.phospho", sam.mean.phospho,envir = .GlobalEnv)
+
 				sam.mean 	<- rbind(sam.mean.phospho,sam.mean)
 				
 			try.error<- class(try(sam.mean.sd <- rbind(sam.mean.phospho.sd, sam.sd)))			

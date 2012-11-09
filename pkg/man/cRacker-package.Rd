@@ -12,7 +12,7 @@ cRacker has been programmed to automate standard normalization strategies of qua
 \tabular{ll}{
 Package: \tab cRacker\cr
 Type: \tab Package\cr
-Version: \tab 1.490\cr
+Version: \tab 1.492\cr
 Date: \tab 2012-10-16\cr
 License: \tab  GNU General Public License\cr
 }
@@ -25,6 +25,9 @@ Henrik Zauber
 Maintainer: Henrik Zauber <Zauber@mpimp-golm.mpg.de>
 }
 \references{
+}
+
+
 }
 
 \keyword{proteomics}

@@ -20,7 +20,7 @@ settings <- list(	tb1.val.replicates 		= "1",
 					tb2.var.group.filternorm = "0",
 					
 					
-					tb3.var.phospho			= "0",
+					tb3.var.phospho			= "none",
 					tb3.var.info			= "1",
 					tb3.outlier				= "none",
 					tb3.val.outlier			= "1",

@@ -1,7 +1,7 @@
 hz.script.exp.design <-
-function(exp.design ,gui.input, colorblind.set, color.blind,.data2){
+function(exp.design ,gui.input, colorblind.set, color.blind,.data2,.data){
 hz.exp.des.parse.data2 <- hz.exp.des.parse(x = colnames(.data2$x) ,exp.des = exp.design,raw.type = .data2$gui.input$raw,gui.input = gui.input)	
-if(dim(exp.design)[1] > 2){.design <- exp.design}
+if(dim(exp.design)[1] == 2){.design <- hz.design(.data=.data)}
 .col 			<- as.numeric(hz.exp.des.parse.data2[,3])
 	if(length(unique(.col))> 1){
 		if(colorblind.set){

@@ -3,10 +3,9 @@ function(path1= NA , path2.set = list("NA","maxquant","default") , import.list=N
 
 require("tcltk2")
 tk2font.set("TkDefaultFont",settings= "-family Tahoma -size 10 -weight normal")   
-save(path1,path2.set,import.list,.data,file = "hz.script.Rdata")
 
 path2 			<-	normalizePath(path2.set$path)
-	ratio.prog <- 10000
+	ratio.prog 	<- 10000
 path1 			<- normalizePath(path1)
 
 path2.test 		<- class(try(setwd(path2)))
@@ -20,6 +19,7 @@ if(path2.test == "try-error"){
 }else{
 	path2.input.file <- ""
 }	
+save(path1,path2.set,import.list,.data,file = "hz.script.Rdata")
 
 
 
@@ -546,7 +546,7 @@ if(gui.input$plot.only == ""){
 		}
 	
 	}
-	#stop()
+
 	####
 	# Advanced:
 	####
@@ -577,24 +577,34 @@ if(gui.input$plot.only == ""){
 	####
 	# end of Advanced
 	####
-	
 	# running hz.matrix.creator
 	gui.input$phospho.string <- import.list$Modifications.identifier
 	
 	#gui.input$phospho <- TRUE
 	gui.input$build.matrix <- TRUE
+	if(length(gui.input$phospho.protein) == 0){
+			gui.input$phospho.protein <- FALSE
+	}
 
 	if(gui.input$phospho){
 		gui.input$build.matrix <- TRUE
 		phospho.grep <- grep(gui.input$phospho.string ,.data$Modifications)
 		unphospho.pep			<- unique(paste(.data$code[phospho.grep],.data$sequence[phospho.grep],sep = "..")	)
 		
+	if(gui.input$phospho.protein){
+		
+	.data$code[phospho.grep] <- paste(.data$code[phospho.grep],gui.input$phospho.string,sep = "..")
+		
+	}else{
 		if(all(is.na(.data$Modified.Sequence))){
-		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],sep = "..")
+		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$sequence[phospho.grep],.data$Modifications[phospho.grep],gui.input$phospho.string,sep = "..")
 		}else{
 		.data$code[phospho.grep] <- paste(.data$code[phospho.grep],.data$Modified.Sequence[phospho.grep],gui.input$phospho.string,sep = "..")
-	
 		}
+	}
+		
+		
+		
 	}
 	
 	
@@ -736,11 +746,11 @@ if(exists(".data2")){
 
 if(gui.input$exp.design != ""){
 	
-	.design  <- read.table(gui.input$exp.design,header = TRUE,sep = "\t")
-	.design  <- .design[.design$Include == 1,]
+	.design  	<- read.table(gui.input$exp.design,header = TRUE,sep = "\t")
+	.design  	<- .design[.design$Include == 1,]
 	.design[,2] <- tolower(make.names(.design[,2],allow = F))
 	.design[,1] <- tolower(make.names(.design[,1],allow = F))
-}	
+}
 
 
 	
@@ -898,7 +908,7 @@ try.error <- class(try(	.design  <- read.table(gui.input$exp.design,header = TRU
 
 set.seed(2)
 print(exp.design)
-error.try <- class(.error	<- try(results.script.exp.design<- hz.script.exp.design(exp.design = exp.design,gui.input = gui.input, colorblind.set = colorblind.set, color.blind = color.blind,.data2)))
+error.try <- class(.error	<- try(results.script.exp.design<- hz.script.exp.design(exp.design = exp.design,gui.input = gui.input, colorblind.set = colorblind.set, color.blind = color.blind,.data2,.data)))
 
 save(exp.design, results.script.exp.design,exp.design,gui.input,colorblind.set,color.blind,.data2, file = paste(rdata.path,"exp.design.Rdata",sep = "/"))
 

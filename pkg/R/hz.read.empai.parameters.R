@@ -344,10 +344,17 @@ tkgrid(tk2label(tb2,text="use list info for exclusion" ),cbmq,sticky = "we")
 # PHospho
 ####
 	
-	tb4.4 				<- tk2checkbutton(tb3)
-	tb3.var.phospho 	<- tclVar(settings$tb3.var.phospho)
-tkconfigure(tb4.4,variable=tb3.var.phospho)
-tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),tb4.4,help.button(tb3,hz.function.file(function.file,"PP")[2] ,hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
+#	tb4.4 				<- tk2checkbutton(tb3)#
+#	tb3.var.phospho 	<- tclVar(settings$tb3.var.phospho)
+#tkconfigure(tb4.4,variable=tb3.var.phospho)
+#tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),tb4.4,help.button(tb3,hz.function.file(function.file,"PP")[2] ,hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
+
+	tb3.phospho 					<- c("none","peptide based analysis","protein based analysis")
+	tb3.var.phospho 				<- tclVar()  
+	tclvalue(tb3.var.phospho) 		<- "none"#settings$tb3.phospho
+	comboBox 							<- ttkcombobox(tb3,values=tb3.phospho,textvariable = tb3.var.phospho,width = 17,state = "readonly")
+
+tkgrid(tk2label(tb3,text=hz.function.file(function.file,"PP")[2],font = fontHeading,width = label.width ),comboBox,help.button(tb3,hz.function.file(function.file,"PP")[2] , hz.function.file(function.file,"PP")[3]),padx = pad.val, pady = pad.y,sticky = "we")
 
 
 ######
@@ -1259,10 +1266,10 @@ tkwait.window(tt2)
 
 
 
-	settings$tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))	
-	tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))
-	if (tb3.var.phospho =="1"){tb3.var.phospho <- TRUE}else{tb3.var.phospho <- FALSE}
-    tb3.var.phospho <- as.character(tb3.var.phospho)
+	#settings$tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))	
+	#tb3.var.phospho <- as.character(tclvalue(tb3.var.phospho))
+	#if (tb3.var.phospho =="1"){tb3.var.phospho <- TRUE}else{tb3.var.phospho <- FALSE}
+    #tb3.var.phospho <- as.character(tb3.var.phospho)
     
    
     settings$tb2.val.score 		<- as.numeric(tclvalue(tb2.val.score))
@@ -1275,6 +1282,35 @@ tkwait.window(tt2)
 #######
 # tab3	 
 #######	
+try(	settings$tb3.phospho <- tclvalue(tb3.var.phospho))
+
+	print(tb3.phospho)
+	print(tclvalue(tb3.var.phospho))
+	print(tb3.phospho[1])
+	print(1)
+	if(tclvalue(tb3.var.phospho) == tb3.phospho[1]){
+		tb3.var.phospho 		<- FALSE
+		tb3.var.phospho.protein <- FALSE
+	}else{
+		
+	
+	if(tclvalue(tb3.var.phospho) == tb3.phospho[2]){
+		tb3.var.phospho 		<- TRUE
+		tb3.var.phospho.protein <- FALSE
+	}else{
+	if(tclvalue(tb3.var.phospho) == tb3.phospho[3]){
+		tb3.var.phospho 		<- TRUE
+		tb3.var.phospho.protein <- TRUE
+	}		
+	}
+
+	
+		
+	}
+
+
+
+
 	settings$tb3.outlier <- as.character(tclvalue(tb3.var.outlier))
 	tb3.var.outlier <- as.character(tclvalue(tb3.var.outlier))
 	if(tb3.var.outlier  == tb3.outlier[1] ){tb3.var.outlier ="NA"}
@@ -1520,6 +1556,8 @@ if(tclvalue(done) == 2){     return(ReadAffy(
 
      				outlier 		= "none",#tb3.var.outlier,
      				phospho 		= FALSE,#tb3.var.phospho,
+     				phospho.protein = tb3.var.phospho.protein,
+
      				zero.treat		= tb3.val.zero.treat,
      				build.matrix	= TRUE,#tb3.var.build.matrix,
 					#plot.only		= binary.rewrite(tb3.var.plot.only),
