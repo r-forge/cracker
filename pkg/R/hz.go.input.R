@@ -22,13 +22,11 @@ data.input 		<- read.delim(data.input.name,header = FALSE,stringsAsFactors = FAL
 )
 if(!exists("data.input")|!dim(data.input)[1] >1| !dim(data.input)[2]> 1){
 	try(
-	
 data.input 		<- read.delim(data.input.name,header = FALSE,stringsAsFactors = FALSE,sep = ";")
 )}
 
 if(!exists("data.input")|!dim(data.input)[1] >1| !dim(data.input)[2]> 1){
 	try(
-	
 data.input 		<- read.delim(data.input.name,header = FALSE,stringsAsFactors = FALSE,sep = ",")
 )}
 
@@ -60,7 +58,13 @@ print(data.input.name)
 .go 		<- .go.list$array
 data.input.name <- .go.list$name
 messagetext <- "ok"
+try.error.path <- class(try(path1 <- tclvalue(path1)))
+#if(try.error.path == "try-error"){
+#	path1 <- path1
+#}
+
 if(!is.na(.go.list$name)){
+	print(path1)
 	grep.name <- grep(as.character(data.input.name),list.files(paste(path1,"mapping-library/",sep = "")))
 	if(length(grep.name) > 0){
 		print("Warning, filename already exists.")

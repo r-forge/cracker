@@ -26,7 +26,7 @@ for(plot.type in 1:plot.loop){
 		if(plot.type == 2){
 		dir.create(.setpath<- paste(paste(path.data,foldername,sep = "/"),"/plots-significant-changes","-",gui.input$expname,sep = ""))
 		setwd(paste(.setpath,sep = "/"))	
-	}
+		}
 		if(exists("hz.cracker.anova.return")){
 			try(p.aov <- hz.cracker.anova.return$p.aov)
 		}
@@ -96,6 +96,9 @@ if(dim(.data2$x)[1] > 1){
 	
 	if(plot.type ==1){
 	error.try <- class(.error<- try(hz.cracker.anova.return <-  hz.script.anova(.data2,gui.input, plot.type,as.numeric(prog.max),pb,ui)))
+	
+	try(	save(hz.cracker.anova.return,file = paste(path.data,foldername,"Rdata/Anova.ttest.Rdata",sep = "/")))
+
 	}
 	
 		if(error.try == "try-error"){

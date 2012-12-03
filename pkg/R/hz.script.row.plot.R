@@ -1,7 +1,10 @@
 hz.script.row.plot <-
 function(.data2,gui.input,y.lab.input,.aov.new = NULL, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,inf.info = NULL){
 
-#	ui <- NULL
+try(	save(.data2,gui.input,y.lab.input,.aov.new, hz.exp.des.parse.data2,colorblind.set,.col,prog.max,ratio.prog,pb,ui,inf.info,file = paste(gui.input$path.data,"row.plot.Rdata",sep = "/"))
+)	
+#stop()
+	#ui <- NULL
 #.aov.new <- hz.cracker.anova.return$.aov.new
 if(is.vector(.data2$x.sd)){
 	
@@ -159,7 +162,7 @@ try(	hz.row.plot(	x = row.plot.data,
 					graphic.type = gui.input$graphic.type,
 					plot.type = "b",
 					barpl = gui.input$barpl,
-					time.groups = T,#gui.input$time.grouped,
+					time.groups = gui.input$time.grouped,
 					group.barplot = F,
 					x.xlab = gui.input$x.xlab,
 					.design = .design,

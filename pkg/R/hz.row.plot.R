@@ -63,7 +63,7 @@ sd.po <- 0
 	}
 	row.x <- rownames(tempmean)
 	x <- apply(x,2,as.numeric)
-	
+	temp.x.m <- list(names = c(col.x))
 	# 
 	
 	
@@ -660,7 +660,7 @@ library(gplots)
 yaxp.v <- c(0,max(as.numeric(tempmean[!is.infinite(tempmean)]),na.rm = TRUE), 4) 
 yaxp.v[is.na(yaxp.v)] <- 1
 yaxp.v[is.infinite(yaxp.v)] <- 1
-print(yaxp.v)
+#print(yaxp.v)
 
 
 				test <- barplot2(

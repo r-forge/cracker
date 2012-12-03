@@ -955,8 +955,13 @@ if(!gui.input$color.plots & gui.input$barpl){
 
 	
 }
-
-assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
+if(1==0){
+pdf("test.design.pdf")
+plot(rep(1,dim(hz.exp.des.parse.data2)[1]),(1:dim(hz.exp.des.parse.data2)[1]),pch = as.numeric(hz.exp.des.parse.data2[,3]),col = hz.exp.des.parse.data2[,1],cex = 2,frame = F,axes = F,xlab = "",ylab = "")
+text(rep(1,dim(hz.exp.des.parse.data2)[1]),c(1:dim(hz.exp.des.parse.data2)[1]),hz.exp.des.parse.data2[,2],pos = 4,adj = 0.5)
+dev.off()
+}
+#assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
 error.try <- class(.error<- try(hz.script.plot.main.return <-  hz.script.plot.main(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername=foldername, colorblind.set= colorblind.set, color.blind = color.blind)))
 
 print(hz.exp.des.parse.data2)
