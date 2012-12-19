@@ -881,7 +881,6 @@ if(gui.input$calc.empai){
 	
 #.data2 <- backup
 # color code
-
 	
 if(gui.input$exp.design != ""){
 
@@ -923,11 +922,16 @@ if(error.try == "try-error"){
 
 }
 
-
+#save(hz.exp.des.parse.data2,.data2,.data,gui.input,file = "test.Rdata")
+order.control <- hz.merge.control(hz.exp.des.parse.data2[,2],colnames(.data2$x))
+if(all(!is.na(order.control))){
+	hz.exp.des.parse.data2 <- hz.exp.des.parse.data2[order.control,]
+}
 if(dim(hz.exp.des.parse.data2)[2] >3 ){
+	print("Reordering data")
 	
 order.control <- hz.merge.control(hz.exp.des.parse.data2[,2],colnames(.data2$x))
-if(any(!is.na(order.control))){
+if(all(!is.na(order.control))){
 	hz.exp.des.parse.data2 <- hz.exp.des.parse.data2[order.control,]
 }
  
@@ -941,6 +945,9 @@ if(any(!is.na(order.control))){
 	}
 
 }
+.col <- hz.exp.des.parse.data2[,1]
+
+
 
 plot.type 	<- 1
 if(!gui.input$color.plots & gui.input$barpl){
@@ -955,11 +962,11 @@ if(!gui.input$color.plots & gui.input$barpl){
 
 	
 }
-if(1==0){
+if(1==1){
 pdf("test.design.pdf")
-plot(rep(1,dim(hz.exp.des.parse.data2)[1]),(1:dim(hz.exp.des.parse.data2)[1]),pch = as.numeric(hz.exp.des.parse.data2[,3]),col = hz.exp.des.parse.data2[,1],cex = 2,frame = F,axes = F,xlab = "",ylab = "")
-text(rep(1,dim(hz.exp.des.parse.data2)[1]),c(1:dim(hz.exp.des.parse.data2)[1]),hz.exp.des.parse.data2[,2],pos = 4,adj = 0.5)
-dev.off()
+try(plot(rep(1,dim(hz.exp.des.parse.data2)[1]),(1:dim(hz.exp.des.parse.data2)[1]),pch = as.numeric(hz.exp.des.parse.data2[,3]),col = hz.exp.des.parse.data2[,1],cex = 2,frame = F,axes = F,xlab = "",ylab = ""))
+try(text(rep(1,dim(hz.exp.des.parse.data2)[1]),c(1:dim(hz.exp.des.parse.data2)[1]),hz.exp.des.parse.data2[,2],pos = 4,adj = 0.5))
+graphics.off()
 }
 #assign("hz.exp.des.parse.data2",hz.exp.des.parse.data2,envir = .GlobalEnv)
 error.try <- class(.error<- try(hz.script.plot.main.return <-  hz.script.plot.main(.data2,.data,gui.input, hz.exp.des.parse.data2,.col,.design,y.lab.input = hz.script.y.lab.return,prog.max,ratio.prog,pb,ui, plot.loop,path.data= gui.input$path.data, foldername=foldername, colorblind.set= colorblind.set, color.blind = color.blind)))

@@ -182,6 +182,7 @@ print(dim(signi.volcano.output[!na.row.exclude,]))
 write.csv(signi.volcano.output[!na.row.exclude,],"volcano-signi-data-p-value-uncorrected.csv")
 }
 if(dim(signi.volcano.output)[1] > 0){
+	save(signi.volcano.output,gui.input,file = "signi-volcano.Rdata")
 try(hz.volcano.mapping.barplot(signi.volcano.output,gui.input))
 }
 }
