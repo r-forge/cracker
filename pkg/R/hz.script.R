@@ -127,7 +127,7 @@ if(exists(".data")){
 	.data <- NA
 }
 
-try(rm(ui))
+#try(rm(ui))
 #assign(".data.test", .data, envir=globalenv())
 
 

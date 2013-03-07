@@ -128,6 +128,23 @@ if(is.vector(x)&margin == 2){x <- t(as.matrix(x))}
 		if(margin == 1){x <- x/x.sum}	
 	}
 	
+	if(norm == "equal.peptides"){
+		
+		if(margin ==1){margin.opp <- 2;.byrow = F}else{margin.opp <- 1;.byrow = T}
+		x.num 		<- apply(as.matrix(x),2,as.numeric)
+		x.num.logic <- apply(x,margin.opp,function(x){any(is.na(x)|x==0)})
+		x.num.sum 	<- x.num[!x.num.logic,]
+		dim.x.num.sum 	<- dim(x.num.sum)
+		if(!is.vector(x.num.sum)){
+			x.num.sum 		<- apply(x.num.sum,margin,sum)
+		}
+		
+		x.num.sum.m <- matrix(x.num.sum,ncol = dim(x)[2],nrow = dim(x)[1],byrow = .byrow)
+		x <- x/x.num.sum.m
+		
+		
+	}
+	
 	if(norm == "median"){
 		
 		x.median <- apply(x,margin,function(a){median(a,na.rm = TRUE)})
@@ -197,7 +214,9 @@ if(is.vector(x)&margin == 2){x <- t(as.matrix(x))}
 	
 	colnames(x) <- col
 	rownames(x) <- row
-	
-	return(list(x = x,sum = apply(x,margin,function(a){sum(a,na.rm = TRUE)}),method = paste("margin:",margin,"| na.sub:",na.sub,"| Normalisation:",norm)))
+	if(!exists("dim.x.num.sum")){
+		dim.x.num.sum <- dim(x)
+	}
+	return(list(x = x,sum = apply(x,margin,function(a){sum(a,na.rm = TRUE)}),method = paste("margin:",margin,"| na.sub:",na.sub,"| Normalisation:",norm),dim.norm.m = dim.x.num.sum))
 	#return(apply(x,margin,function(a){sum(a,na.rm = TRUE)}))
 	}

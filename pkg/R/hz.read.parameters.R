@@ -493,10 +493,8 @@ entryWidth 	<- 17
 	
 
 	tb4.val.raws  					<- c(	"fraction of total (fot)",
-											"fot plus n correction (fotn)",
-											#"fot 50",
-											#"fotn 50",
-											"no normalization")
+											"fot plus n correction (fotn)",#"fot 50",	#"fotn 50",
+												"no normalization","equal.peptides")
 	tb4.val.raw.values  			<- tclVar()  
 	tclvalue(tb4.val.raw.values ) 	<- settings$tb4.val.raw.values 
 	if(length(grep(settings$tb4.val.raw.values,tb4.val.raws,fixed = TRUE))==0){tclvalue(tb4.val.raw.values ) 	<- tb4.val.raws[1]}
@@ -1128,6 +1126,9 @@ binary.rewrite <- function(x){
 		
 		if(tab.4.var.raw.x ==tb4.val.raws[2]){tab.4.var.raw.x <- FALSE;n.correction <- TRUE}
 		if(tab.4.var.raw.x ==tb4.val.raws[1]){tab.4.var.raw.x <- FALSE;n.correction <- FALSE}
+		if(tab.4.var.raw.x ==tb4.val.raws[4]){tab.4.var.raw.x <- FALSE;n.correction <- FALSE; sum.of.total <- tb4.val.raws[4]}
+		
+		
 		#if(tab.4.var.raw.x ==tb4.val.raws[3]){tab.4.var.raw.x <- FALSE;n.correction <- TRUE; 	sum.of.total <- "sum50"}
 		#if(tab.4.var.raw.x ==tb4.val.raws[4]){tab.4.var.raw.x <- FALSE;n.correction <- FALSE; 	sum.of.total <- "sum50"}
 	

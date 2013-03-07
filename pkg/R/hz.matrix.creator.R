@@ -2392,7 +2392,7 @@ if(all(outlier == "NA" & norm.tog.pep == FALSE) | 1==1){
 		try(used.peptides <- hz.shape(write.pep.all.mean.n,shape = shape,group.shape)$shape)
 
 	if(!exists("info.data.matrix")){info.data.matrix <- "not collected"}
-	if(!exists(data.top3.rpn)){		data.top3.rpn <- NULL
+	if(!exists("data.top3.rpn")){		data.top3.rpn <- NULL
 	}
 	return(list(	x=sam.mean, 
 					x.sd =sam.sd,

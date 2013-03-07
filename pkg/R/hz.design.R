@@ -36,6 +36,10 @@ temp.all <-unique((temp.all))
 			for(i in 1: length(.col)) {
 				temp.f		<- .col[[i]]
 				temp.f		<- temp.f[length(temp.f)]
+				if(length(temp.f) == 0){
+					temp.f <- "error.in.path.name"
+				}
+				
 				.cols[i] 	<- temp.f
 			}
 

@@ -150,7 +150,9 @@ assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 #assign("input.list",input.list,envir= .GlobalEnv)
 
 	input.list 	<- input.list[!is.na(input.list[,3]),]
-	
+			print(gui.input$onetailed.ttest)
+			
+
 		if(exists("list.ttest.one.sided") &gui.input$onetailed.ttest){
 		#list.ttest.one.sided[[i]] <- oneside.ttest$test
 		
@@ -264,3 +266,5 @@ if(dim(input.all.list)[2] == 5){
 write.csv(input.all.list,"ttest-pvalues.csv")
 return(list(aov=.return,pt = pt,ttest = list.ttest,ttestlist = input.all.list,type.vector.ttest = type.all.vector))
 }
+
+
