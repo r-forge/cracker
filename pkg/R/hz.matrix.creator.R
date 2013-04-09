@@ -51,7 +51,9 @@ function(
 	prog.max,pb,
 	.length.matrix
 ){
-	
+temp <- environment()
+#unique(ls(),ls(envir = temp)),
+save.image( "hui.test.rda")
 # Init progress bar if not done yet
 print("start matrix.creator function")
 library(grid)
@@ -1748,14 +1750,15 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 						norm.data <- cbind(norm.data,temp.u)
 					}
 					
-					test.sd		<- apply(norm.data,1,function(x){
-																				x <- mean(as.numeric(x),na.rm = TRUE);
-								x.sd<- sd(as.numeric(x),na.rm = TRUE)/x;
-							return(x.sd/x)
-					})
+								test.sd	<- apply(norm.data,1,function(x){
+										x.sd	<- sd(as.numeric(x),na.rm = TRUE);
+										x 		<- mean(as.numeric(x),na.rm = TRUE);
+										return(x.sd/x)
+									})
 					temp.e.sd	<- apply(pep.all.mean.n ,1,function(x){
-																				x <- mean(as.numeric(x),na.rm = TRUE);
-								x.sd<- sd(as.numeric(x),na.rm = TRUE)/x;
+								x.sd<- sd(as.numeric(x),na.rm = TRUE)/x
+								x <- mean(as.numeric(x),na.rm = TRUE)
+
 								return(x.sd/x)
 					})
 					new.sd <- sum(as.numeric(test.sd),na.rm = TRUE) #/sum(norm.data,na.rm = TRUE)
@@ -1902,7 +1905,7 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 					
 				} else {
 					temp.sd		<- sd(as.numeric(temp.i),na.rm=TRUE)
-					temp.sd 	<- temp.sd/mean(as.numeric(temp.i),na.rm=TRUE)
+					temp.sd 	<- temp.sd/temp.mean
 					temp.n		<- length(as.numeric(temp.i)[!is.na(as.numeric(temp.i))])
 					all.n		<- c(all.n,temp.n)
 					all.mean.o 	<- c(all.mean.o,temp.mean)
