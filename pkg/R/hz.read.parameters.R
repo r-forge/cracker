@@ -1197,8 +1197,8 @@ try(	 tb3.var.phospho <-  tclvalue(tb3.var.phospho))
 try(settings$tb3.phospho <- 	 tb3.var.phospho)
 
 
-	tb3.var.phospho.protein <- FALSE
-	tb3.var.phospho <- FALSE
+	#tb3.var.phospho.protein <- FALSE
+	#tb3.var.phospho <- FALSE
 	if((tb3.var.phospho) == tb3.phospho[1]){
 		tb3.var.phospho 		<- FALSE
 		tb3.var.phospho.protein <- FALSE

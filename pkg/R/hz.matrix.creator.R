@@ -2142,10 +2142,14 @@ sam.mean.phospho <- matrix()
 			assign("cracker.counter.temp",1,envir = .GlobalEnv)
 			assign("cracker.ratio.prog.temp",ratio.prog,envir = .GlobalEnv)
 
-			
+			save(uni.acc,sam.mean,temp,acc,outlier,row.norm,merge.method,ui,pb,prog.max,i,names..col,file = "löschmich.Rdata")
+
 			for( i in 1:length(unique(names..col))){
 				temp 		<- as.matrix(sam.mean[,names..col == unique(names..col)[i]])
 				
+				
+				# main function 
+
 				test		<- as.matrix(aggregate(as.vector(temp),list(rep(acc,dim(temp)[2])),function(x){x <- hz.agg.fun(x,outlier,row.norm,merge.method,ui,pb,prog.max,c(i,length(unique(names..col))))}))
 				test.order  <- hz.merge.control(test[,1],uni.acc)
 
@@ -2168,7 +2172,7 @@ sam.mean.phospho <- matrix()
 				data.sd.rel <- cbind(data.sd.rel,test[test.order,5])
 				all.n..col	<- cbind(all.n..col,test[test.order,6])
 				data.top3.rpn 	<- cbind(data.top3.rpn,test[test.order,7])
-				aov.data.2 <- rbind(aov.data.2,aov.data)
+				aov.data.2 	<- rbind(aov.data.2,aov.data)
 				
 			ratio.prog 	<- prog.max/length(unique(names..col))
 								
@@ -2190,7 +2194,8 @@ sam.mean.phospho <- matrix()
 		sam.sd 		<- data.sd.rel
 		sam.mean 	<- data.mean
 	}
-	
+	aov.data.1 	<- aov.data.2
+	aov.data 	<- aov.data.2
 	sys2 <- Sys.time()
 	print("hurray")
 	# -- give names --
@@ -2199,7 +2204,7 @@ sam.mean.phospho <- matrix()
 		colnames(sam.mean) 	<- unique(.col.all)
 		rownames(sam.mean) 	<- unique(choosen.proteins)
 		sam.sd 				<- as.matrix(sam.sd)
-		colnames(sam.sd) 	<- paste("SD",unique(.col.all))
+		colnames(sam.sd) 	<- paste("rSD",unique(.col.all))
 		rownames(sam.sd) 	<- unique(choosen.proteins)
 			
 	}
@@ -2208,7 +2213,7 @@ sam.mean.phospho <- matrix()
 		colnames(sam.mean) 	<- paste(unique(temp.my$sam_id),unique(temp.my$sam_name))
 		rownames(sam.mean) 	<- unique(choosen.proteins)
 		sam.sd 				<- as.matrix(sam.sd)
-		colnames(sam.sd) 	<- paste("SD" ,unique(temp.my$sam_id),unique(temp.my$sam_name))
+		colnames(sam.sd) 	<- paste("rSD" ,unique(temp.my$sam_id),unique(temp.my$sam_name))
 		rownames(sam.sd) 	<- unique(choosen.proteins)
 
 	
@@ -2370,7 +2375,7 @@ if(all(outlier == "NA" & norm.tog.pep == FALSE) | 1==1){
 			colnames(aov.data) = c("accession","experiment","intensity")
 		}
 	aov.export.1 = aov.data.2
-	aov.export.2 = aov.data	
+	aov.export.2 = aov.data.2	
 	}else{
 	colnames(aov.data) = c("accession","experiment","intensity")
 

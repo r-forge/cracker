@@ -75,12 +75,13 @@ if(progressbar ){
 	temp.i.aov[,2] <- as.numeric(	temp.i.aov[,2])
 	temp.i.aov	<- as.data.frame(temp.i.aov, stringsAsFactors = FALSE)
 
-
 if(length(unique(temp.i.aov$experiment)) != length(temp.i.aov$experiment)& .aov.true& length(unique(temp.i.aov$experiment)) > 1){
-	
+
+#assign("temp.i.aov", temp.i.aov,envir = .GlobalEnv)
+
 	temp.aov 	<- aov(as.numeric(temp.i.aov$intensity)~ as.factor(temp.i.aov$experiment))
 	
-assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
+#assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 
 	temp.agg <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),FUN=length)
 			#print(temp.agg)
@@ -117,8 +118,10 @@ assign("temp.i.aov",temp.i.aov,envir = .GlobalEnv)
 				#print(dim(temp.i.aov))
 
 	}
-	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
+	#assign("temp.i.aov.t", temp.i.aov,envir = .GlobalEnv)
 
+	type.test <- aggregate(temp.i.aov[,1],list(temp.i.aov[,1]),length)
+	
 	
 		#assign("temp.type.test",type.test,envir = .GlobalEnv)
 
