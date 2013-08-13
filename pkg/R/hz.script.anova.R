@@ -28,7 +28,7 @@ if(dim(.data2$x)[2] > 1){
 	
 	}
 	pdf("density-tested peptides.pdf")
-	try(plot(density(as.numeric(aov.export[,3]) ),main = temp.samples.lab))
+		try(plot(density(as.numeric(aov.export[,3]) ),main = temp.samples.lab))
 	dev.off()
 	
 	pdf("qqplot.pdf")

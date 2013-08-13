@@ -1423,6 +1423,14 @@ temp.my.pepid <- merge(as.matrix(temp.my.pepid),temp.a.pep,by = 1,all = TRUE)
 			}
 			
 			norm.type		<- rep("N15",dim(pep.all.mean)[2])
+			
+			
+			# infinite cleanup 
+			if(any(is.infinite(pep.all.mean))){
+				rangeVal <- range(pep.all.mean[!is.infinite(pep.all.mean)],na.rm = T)
+				pep.all.mean[is.infinite(pep.all.mean) & pep.all.mean > 0 ] <- rangeVal * 1.1
+				pep.all.mean[is.infinite(pep.all.mean) & pep.all.mean < 0 ] <- rangeVal * 0.1
+			}
 			pep.all.mean.n	<- pep.all.mean
 		}
 	}

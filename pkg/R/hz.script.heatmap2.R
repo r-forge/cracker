@@ -19,12 +19,20 @@ function(.data2,gui.input,p.aov, hz.exp.des.parse.data2,.col,colorblind.set,prog
 
 
 	hm.input2[is.na(hm.input) != is.na(hm.input2)]<- 2
-	if(dim(hm.input)[2] >2){
+	if(dim(hm.input)[2] >2|1==0){
 		hm.input.plot <- hz.norm(hm.input,norm = "z")$x
 		report.heatmap.norm <- "z-score"
+		
+		naVecNew <- as.vector(is.na(hm.input.plot))
+		naVec <- as.vector(is.na(hm.input))
+	
 	}else{
 		hm.input.plot <- hz.norm(hm.input,norm = "median")$x
 		report.heatmap.norm <- "mean"
+	}
+	if(gui.input$N15& gui.input$N15){
+		hm.input.plot <- hm.input
+		
 	}
 	
 	

@@ -166,9 +166,9 @@ if(is.vector(x)&margin == 2){x <- t(as.matrix(x))}
 	}
 	
 	if(norm == "z"){
-	x.mean <- apply(x,margin,function(a){mean(a,na.rm = TRUE)})
-	x.sd <- apply(x,margin,function(a){sd(a,na.rm = TRUE)})
-
+		x.mean 	<- apply(x,margin,function(a){mean(a,na.rm = TRUE)})
+		x.sd 			<- apply(x,margin,function(a){sd(a,na.rm = TRUE)})
+		x.sd[is.na(x.sd)]			<- 0
 		if(margin == 2){
 			x <- t(t(x-x.mean)/x.sd)
 		}

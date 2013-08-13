@@ -663,8 +663,14 @@ yaxp.v[is.infinite(yaxp.v)] <- 1
 #print(yaxp.v)
 
 
+				temp.max<- max(as.numeric(sd.po)+as.numeric(temp.y[!is.infinite(temp.y)]),na.rm = TRUE)
+				temp.min.off <- temp.min
+				if(temp.min < 0){
+					temp.max <- 0
+					temp.min.off <- 0
+				}
 				test <- barplot2(
-				temp.y-temp.min,
+				temp.y-temp.min.off,
 				main = row.x[i],
 				col = plot.col,
 				names.arg = col.x2,
@@ -680,8 +686,8 @@ yaxp.v[is.infinite(yaxp.v)] <- 1
 				xpd=F, 
 				yaxp=yaxp.v 
 				,
-				ylim = c(temp.min,max(as.numeric(sd.po)+as.numeric(temp.y[!is.infinite(temp.y)]),na.rm = TRUE)), 
-				offset = temp.min,
+				ylim = c(temp.min, temp.max), 
+				offset = temp.min.off,
 				mgp = c(3.9,1,0),
 				plot.grid = T,
 				grid.col = "darkgrey"
@@ -700,7 +706,9 @@ yaxp.v[is.infinite(yaxp.v)] <- 1
 			l.pos[is.infinite(as.numeric(inf.m[i,])) & as.numeric(inf.m[i,] ) < 0 ] <- 1
 
 			if(barpl&time.groups){n.input <- as.vector(t(time.groups.n))}else{n.input <- inf.m[i,]}
-			if(exists("temp.min")){			text(temp.x,y = temp.min,labels=n.input,col = "white",pos = l.pos,cex = 0.8)
+			if(exists("temp.min")){			
+				text(temp.x,y = temp.min,labels=n.input,col = "darkgrey",pos = l.pos,cex = 0.8,bg = "grey")
+		
 }else{
 	
 }

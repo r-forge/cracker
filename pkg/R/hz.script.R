@@ -19,7 +19,7 @@ if(path2.test == "try-error"){
 }else{
 	path2.input.file <- ""
 }	
-save(path1,path2.set,import.list,.data,file = "hz.script.Rdata")
+save(path1,path2.set,import.list,.data,file = paste(path2.set$path,"hz.script.Rdata",sep = "/"))
 
 
 
@@ -670,7 +670,7 @@ try(hz.write.unique.prots.seq(.data))
 print(dim(.data))
 print("starting hz.matrix.creator")
 	.error <- class(try(
-	.data2 	<- hz.matrix.creator(	.data,
+	.data2 	<- hz.matrix.creator(	x = .data,
 									Raw 			= gui.input$raw,
 								type			= gui.input$quant,
 								score 			= gui.input$score,

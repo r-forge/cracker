@@ -19,4 +19,4 @@ function(x,rel.replace){
 	return(list(x=x,inf.vec = inf.vec))
 
 	
-	}
+}

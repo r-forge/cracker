@@ -14,9 +14,16 @@ data.sum 	<-	apply(data,1,function(x){sum(x,na.rm = TRUE)})
 data 		<- data[data.sum !=0,]
 pca.rows	<- pca.rows[data.sum !=0]
 if(!gui.input$n15.log2){
-data.log 	<- log2(data)}else{data.log <- data}
-data.log.inf <- hz.inf.replace(data.log,0.1)
+data.log 			<- log2(data)
+data.log.inf 		<- hz.inf.replace(data.log,0.1)
 data.log <- data.log.inf$x
+
+}else{
+	
+	data.log <- data
+
+}
+
 
 
 

@@ -84,7 +84,7 @@ if(length(templates) ==0){
 		#try(data.file <-	read.csv(read.in,sep = import.list$sep,dec =(import.list$dec),skip = import.list$skip ,stringsAsFactors = FALSE))
 		#print(dim(data.file))
 		
-		loop.control <- T
+loop.control <- T
 init  <- 0
 steps <- 200000
 data.file <- c()
@@ -194,7 +194,14 @@ colnames(data.file) <- .col.name
 			
 				
 		}else{
-			intensity.choose 		<- data.import$intensity.2/data.import$intensity.1
+			intensity.choose 		<- as.numeric(data.import$intensity.2)/as.numeric(data.import$intensity.1)
+			# extremeValues 		<- range(intensity.choose[!is.infinite(intensity.choose)],na.rm = T)
+			# intensity.choose <<- intensity.choose
+
+			# intensity.choose[is.infinite(intensity.choose) & intensity.choose > 0] <- 	extremeValues[2]*1.2
+			# intensity.choose[is.infinite(intensity.choose) & intensity.choose < 0] <- 	extremeValues[1]*0.2
+				
+			
 			data.import$intensity.1 <- intensity.choose
 		
 		}
